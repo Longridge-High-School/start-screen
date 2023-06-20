@@ -25,11 +25,7 @@ import {MDXComponent} from '~/lib/mdx'
 
 import {getSupplyLevels} from '~/lib/printers.server'
 
-import {
-  getTimetableDay,
-  getTimetableWeek,
-  getSessionPeriods
-} from '~/utils/get-timetable-day'
+import {getTimetableDay, getTimetableWeek} from '~/utils/get-timetable-day'
 
 interface LoaderData {
   user?: User
@@ -249,7 +245,11 @@ const StartPage = () => {
   return (
     <div>
       <div className="text-center bg-brand-dark text-white text-xl p-2">
-        <MDXComponent code={headerStrip} currentUser={user!.username} />
+        {headerStrip !== '' ? (
+          <MDXComponent code={headerStrip} currentUser={user!.username} />
+        ) : (
+          ''
+        )}
       </div>
       <div className="grid grid-cols-2 2xl:grid-cols-5 p-4 gap-4">
         <Intro
