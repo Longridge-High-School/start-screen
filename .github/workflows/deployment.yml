@@ -80,7 +80,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: longridgehighschool/start-screen
 
       - name: 🐳 Docker build
         uses: docker/build-push-action@v4
