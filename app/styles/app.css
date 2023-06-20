@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  @apply min-h-screen;
+}
+
+body {
+  @apply bg-cover bg-center;
+}
+
+a {
+  @apply text-brand-light;
+}
+
+a:hover {
+  @apply text-brand-dark;
+}
+
+.number-zero {
+  color: #9c88ff;
+}
+
+.number-one {
+  color: #00a8ff;
+}
+
+.number-two {
+  color: #fbc531;
+}
+
+.number-three {
+  color: #4cd137;
+}
+
+.number-four {
+  color: #487eb0;
+}
+
+.number-five {
+  color: #e84118;
+}
+
+.number-six {
+  color: #7f8fa6;
+}
+
+.number-seven {
+  color: #353b48;
+}
+
+.number-eight {
+  color: #273c75;
+}

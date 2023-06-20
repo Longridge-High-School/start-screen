@@ -1,0 +1,137 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserType {
+  STAFF
+  STUDENT
+}
+
+model User {
+  id            Int              @id @default(autoincrement())
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  username      String
+  admin         Boolean          @default(false)
+  type          UserType         @default(STUDENT)
+  name          String           @default("")
+  upn           String           @default("")
+  yearGroup     String           @default("")
+  formGroup     String           @default("")
+  manual        Boolean          @default(false)
+  classesTaught Class[]
+  classSessions StudentSession[]
+  shortcuts     Shortcut[]
+}
+
+model Class {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  name      String    @unique()
+  teacher   User      @relation(fields: [teacherId], references: [id])
+  teacherId Int
+  sessions  Session[]
+}
+
+model StudentSession {
+  id        Int     @id @default(autoincrement())
+  session   Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sessionId Int
+  student   User    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId Int
+}
+
+model Session {
+  id        Int              @id @default(autoincrement())
+  name      String
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  startTime String
+  endTime   String
+  class     Class            @relation(fields: [classId], references: [id], onDelete: Cascade)
+  classId   Int
+  students  StudentSession[]
+  room      String           @default("")
+}
+
+model Shortcut {
+  id       Int      @id @default(autoincrement())
+  title    String
+  icon     String
+  target   String
+  scopes   String[]
+  owner    User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId  Int
+  priority Int      @default(10)
+}
+
+model WirelessVoucher {
+  id        Int      @id @default(autoincrement())
+  code      String
+  type      String
+  claimed   Boolean
+  note      String   @default("")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model Config {
+  id    Int    @id @default(autoincrement())
+  key   String @unique()
+  value String
+}
+
+model Printer {
+  id            Int     @id @default(autoincrement())
+  name          String
+  staffOnly     Boolean
+  ip            String
+  snmpCommunity String
+  blackOID      String
+  cyanOID       String
+  magentaOID    String
+  yellowOID     String
+}
+
+model Advert {
+  id        Int      @id @default(autoincrement())
+  name      String
+  startDate DateTime
+  endDate   DateTime
+  target    String
+  targets   String[]
+  image     String
+}
+
+model Page {
+  id         Int     @id @default(autoincrement())
+  title      String
+  slug       String  @unique()
+  body       String
+  bodyCache  String
+  simplePage Boolean
+  staffOnly  Boolean @default(false)
+}
+
+model LogEntry {
+  id      Int      @id @default(autoincrement())
+  time    DateTime @default(now())
+  system  String
+  message String
+  actor   String
+}
+
+model Doodle {
+  id        Int      @id @default(autoincrement())
+  name      String
+  startDate DateTime
+  endDate   DateTime
+  body      String
+  bodyCache String
+}

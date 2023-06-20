@@ -1,0 +1,6 @@
+docs/
+scripts/
+.github/
+
+prettier.config.js
+.eslintrc.js
