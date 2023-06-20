@@ -385,45 +385,6 @@ const TimetableSession: React.FC<{session?: Session & {class: Class}}> = ({
   )
 }
 
-const Timetable = ({
-  sessions,
-  day
-}: {
-  sessions: Session & {class: Class}
-  day: string
-}) => {
-  const {p1, p2, p3, p4, p5, am, pm} = getSessionPeriods(day, sessions as any)
-
-  return (
-    <div className="bg-white rounded col-span-2 lg:col-span-1 xl:col-span-2 shadow-lg">
-      <div className="grid grid-cols-2 grid-rows-9">
-        <div className="bg-brand-light text-white p-3">AM Registration</div>
-        <TimetableSession session={am}></TimetableSession>
-        <div className="bg-brand-light text-white p-3">P1</div>
-        <TimetableSession session={p1}></TimetableSession>
-        <div className="bg-brand-light text-white p-3">P2</div>
-        <TimetableSession session={p2}></TimetableSession>
-        <div className="col-span-2 bg-brand-dark text-white text-center">
-          Break
-        </div>
-        <div className="bg-brand-light text-white p-3">P3</div>
-        <TimetableSession session={p3}></TimetableSession>
-        <div className="bg-brand-light text-white p-3">P4</div>
-        <TimetableSession session={p4}></TimetableSession>
-        <div className="col-span-2 bg-brand-dark text-white text-center">
-          Lunch
-        </div>
-        <div className="bg-brand-light text-white p-3">PM Registration</div>
-
-        <TimetableSession session={pm}></TimetableSession>
-        <div className="bg-brand-light text-white p-3">P5</div>
-
-        <TimetableSession session={p5}></TimetableSession>
-      </div>
-    </div>
-  )
-}
-
 export const CatchBoundary = () => {
   const {status, data} = useCatch()
 

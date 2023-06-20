@@ -1,5 +1,4 @@
 import {type LoaderArgs, json} from '@remix-run/node'
-import type {WirelessVoucher} from '@prisma/client'
 import qrcode from 'qrcode'
 
 import {useLoaderData} from '@remix-run/react'
