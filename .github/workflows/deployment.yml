@@ -81,6 +81,12 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: longridgehighschool/start-screen
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha
 
       - name: 🐳 Docker build
         uses: docker/build-push-action@v4
