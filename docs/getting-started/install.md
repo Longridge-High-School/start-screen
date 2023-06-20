@@ -23,7 +23,7 @@ services:
     ports:
       - '5432:5432'
   remix:
-    image: ghcr.io/longridge-high-school/connect.lhs.lancs.sch.uk:main
+    image: longridgehighschool/start-screen:main
     restart: always
     ports:
       - '3000:3000'

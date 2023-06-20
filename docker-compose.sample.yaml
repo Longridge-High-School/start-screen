@@ -1,0 +1,24 @@
+version: '3.9'
+services:
+  db:
+    image: postgres:14
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: YOUR_PASSWORD
+    volumes:
+      - /path/to/db:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+  remix:
+    image: longridgehighschool/start-screen:main
+    restart: always
+    ports:
+      - '3000:3000'
+    environment:
+      - DATABASE_URL=postgresql://postgres:YOUR_PASSWORD@db:5432/connect?connection_limit=30&pool_timeout=0
+    volumes:
+      - /path/to/icons:/app/public/icons
+      - /path/to/adverts:/app/public/adverts
+      - /path/to/assets:/app/public/assets
+    depends_on:
+      - db
