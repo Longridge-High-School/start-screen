@@ -6,8 +6,46 @@ on:
   pull_request: {}
 
 jobs:
+  prepare:
+    name: 🎫 Prepare
+    runs-on: ubuntu-latest
+    outputs:
+      app: ${{ steps.filter.outputs.app }}
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v3
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: 💾 Cache Node Modules
+        id: node-cache
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+
+      - name: 📥 Download deps
+        if: steps.node-cache.outputs.cache-hit != 'true'
+        run: npm install
+
+      - name: 🧭 Find Changes
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            app:
+              - 'app/**'
+              - 'package.json'
+              - 'package-lock.json'
+              - 'prisma/**'
+              - 'public/**'
+
   lint:
     name: ⬣ ESLint
+    needs: prepare
+    if: ${{ needs.changes.outputs.app == 'true' }}
     runs-on: ubuntu-latest
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-lint
@@ -19,16 +57,22 @@ jobs:
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
 
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
+      - name: 💾 Cache Node Modules
+        id: node-cache
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: 🔬 Lint
         run: npm run lint
 
   typecheck:
     name: ʦ TypeScript
+    needs: prepare
+    if: ${{ needs.changes.outputs.app == 'true' }}
     runs-on: ubuntu-latest
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-ts
@@ -40,10 +84,14 @@ jobs:
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
 
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
+      - name: 💾 Cache Node Modules
+        id: node-cache
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: 🔎 Type check
         run: npm run typecheck
@@ -51,6 +99,7 @@ jobs:
   build:
     name: 🐳 Build
     needs: [lint, typecheck]
+    if: ${{ needs.changes.outputs.app == 'true' }}
     runs-on: ubuntu-latest
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
