@@ -40,6 +40,7 @@ To avoid bloating the bundles some imports are provided from the app.
 | :------------------------------------------------- | :--------------------------------------------------------------- |
 | `import motion from 'framer-motion/motion'`        | `motion` from [Framer Motion](https://www.framer.com/motion/).   |
 | `import useHydrated from 'lib-hooks-use-hydrated'` | The `useHydrated` React hook which returns `true` on the client. |
+| `import currentUser from 'data-current-user'`      | The current users username.                                      |
 
 ## Merry Christmas
 

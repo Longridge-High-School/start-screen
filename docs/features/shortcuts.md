@@ -19,7 +19,7 @@ Scopes are added to the shortcut search if they apply to the current user.
 
 ### Available Scopes
 
-| Scope               | Description                                                                                             | Example Values |
+| Scope               | Description                                                                                             | Example Scopes |
 | :------------------ | :------------------------------------------------------------------------------------------------------ | :------------- |
 | `all`               | Always added                                                                                            | _N/A_          |
 | `local`             | Added to search if the user is coming from [localIp](/admin/configuration#localIp).                     | _N/A_          |

@@ -5,6 +5,8 @@
 
 - Features
 
+  - [Doodles](/features/doodles)
+  - [Pages](/features/pages)
   - [Guest WiFi Vouchers](/features/guest-wifi-vouchers)
   - [Shortcuts](/features/shortcuts)
 
