@@ -16,11 +16,11 @@ param (
 
 & 'C:\Program Files (x86)\SIMS\SIMS .net\CommandReporter.exe' /USER:"$SIMSUser" /PASSWORD:"$SIMSPassword" /REPORT:"Connect Staff" /OUTPUT:"$env:TEMP\staff-code.xml"
 & 'C:\Program Files (x86)\SIMS\SIMS .net\CommandReporter.exe' /USER:"$SIMSUser" /PASSWORD:"$SIMSPassword" /REPORT:"Connect Students" /OUTPUT:"$env:TEMP\students.xml"
-& 'C:\Program Files (x86)\SIMS\SIMS .net\CommandReporter.exe' /USER:"$SIMSUser" /PASSWORD:"$SIMSPassword" /REPORT:"Connect Timetables" /OUTPUT:"$env:TEMP\timetables.xml"
+& 'C:\Program Files (x86)\SIMS\SIMS .net\CommandReporter.exe' /USER:"$SIMSUser" /PASSWORD:"$SIMSPassword" /REPORT:"Connect Classes" /OUTPUT:"$env:TEMP\classes.xml"
 
 $staffCodes = Get-Content "$env:TEMP\staff-code.xml"
 $students = Get-Content "$env:TEMP\students.xml"
-$timetables = Get-Content "$env:TEMP\timetables.xml"
+$classes = Get-Content "$env:TEMP\classes.xml"
 
 function Export-ToConnect($body, $url){
   $encodedContent = [System.Text.Encoding]::UTF8.GetBytes($body)
@@ -39,4 +39,4 @@ function Export-ToConnect($body, $url){
 
 Export-ToConnect -body $staffCodes -url "$ConnectURL/import/staff"
 Export-ToConnect -body $students -url "$ConnectURL/import/students"
-Export-ToConnect -body $timetables -url "$ConnectURL/import/timetables"
+Export-ToConnect -body $classes -url "$ConnectURL/import/classes"
