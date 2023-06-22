@@ -33,6 +33,7 @@ jobs:
 
       - name: 🧭 Find Changes
         uses: dorny/paths-filter@v2
+        id: filter
         with:
           filters: |
             app:
