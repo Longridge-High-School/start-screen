@@ -45,7 +45,7 @@ jobs:
   lint:
     name: ⬣ ESLint
     needs: prepare
-    if: ${{ needs.changes.outputs.app == 'true' }}
+    if: ${{ needs.prepare.outputs.app == 'true' }}
     runs-on: ubuntu-latest
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-lint
@@ -72,7 +72,7 @@ jobs:
   typecheck:
     name: ʦ TypeScript
     needs: prepare
-    if: ${{ needs.changes.outputs.app == 'true' }}
+    if: ${{ needs.prepare.outputs.app == 'true' }}
     runs-on: ubuntu-latest
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-ts
@@ -99,7 +99,7 @@ jobs:
   build:
     name: 🐳 Build
     needs: [lint, typecheck]
-    if: ${{ needs.changes.outputs.app == 'true' }}
+    if: ${{ needs.prepare.outputs.app == 'true' }}
     runs-on: ubuntu-latest
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
