@@ -29,6 +29,18 @@ const AdminIndex = () => {
       <div className="bg-white w-1/2 rounded-xl shadow p-2 m-auto mt-4">
         <h1 className="text-3xl">Admin</h1>
         <div className="grid grid-cols-3 gap-2">
+          <div className="col-span-3">
+            <p className="text-center">
+              Start Screen -{' '}
+              <a href="https://github.com/Longridge-High-School/start-screen">
+                GitHub
+              </a>{' '}
+              -{' '}
+              <a href="https://longridge-high-school.github.io/start-screen/">
+                Docs
+              </a>
+            </p>
+          </div>
           <a
             href="/admin/config"
             className="text-center border border-brand-dark rounded"
