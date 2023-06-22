@@ -55,7 +55,7 @@ the `azure-upn` header.
 Without the header Start Screen will throw an error.
 
 Any solution that places the users email into the `azure-upn` header will work.
-[Follow this guide](/guides/configuring-app) to setup Azure Application Proxy
+[Follow this guide](/guides/configuring-aap) to setup Azure Application Proxy
 with the required header.
 
 ## Next Steps

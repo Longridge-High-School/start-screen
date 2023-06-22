@@ -17,11 +17,14 @@
 
   - Data
 
+    - [Classes](/data/classes)
     - [Staff](/data/staff)
+    - [Students](/data/students)
 
 - Guides
 
   - [Configuring Azure Application Proxy](/guides/configuring-aap)
+  - [Importing from your MIS](/guides/importing-from-your-mis)
   - [Working with MDX](/guides/working-with-mdx)
 
 - [Examples](/examples)
