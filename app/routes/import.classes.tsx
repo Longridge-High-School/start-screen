@@ -1,16 +1,9 @@
 import {type ActionArgs, json} from '@remix-run/node'
-import {asyncForEach, diffArray, indexedBy, keys} from '@arcath/utils'
+import {asyncForEach, indexedBy, keys} from '@arcath/utils'
 
 import {getPrisma} from '~/lib/prisma'
 import {getConfigValue} from '~/lib/config.server'
 import {log} from '~/log.server'
-
-type ClassEntry = {
-  multiple_id: string
-  Class?: string
-  Work_x0020_Email?: string
-  UPN?: string
-}
 
 export const action = async ({request}: ActionArgs) => {
   const token = request.headers.get('Import-Token')
