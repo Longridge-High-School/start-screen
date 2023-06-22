@@ -1,11 +1,5 @@
 import type {LoaderFunction} from '@remix-run/node'
-import type {
-  User,
-  Class,
-  Shortcut,
-  Advert,
-  Doodle as DBDoodle
-} from '@prisma/client'
+import type {User, Shortcut, Advert, Doodle as DBDoodle} from '@prisma/client'
 import {useEffect} from 'react'
 import {diffArray, pick} from '@arcath/utils'
 
@@ -81,8 +75,21 @@ export const loader: LoaderFunction = async ({request}) => {
       ? adverts[Math.floor(Math.random() * adverts.length)]
       : null
 
+  const today = new Date()
+  const doodleDate = new Date(
+    `${today.getFullYear()}-${(today.getMonth() + 1)
+      .toString()
+      .padStart(2, '0')}-${today
+      .getDate()
+      .toString()
+      .padStart(2, '0')} 00:00:00+0000`
+  )
+
   const doodle = await prisma.doodle.findFirst({
-    where: {startDate: {lte: new Date()}, endDate: {gte: new Date()}},
+    where: {
+      startDate: {lte: doodleDate},
+      endDate: {gte: doodleDate}
+    },
     orderBy: {endDate: 'asc'}
   })
 
