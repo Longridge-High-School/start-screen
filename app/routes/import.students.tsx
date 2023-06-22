@@ -1,7 +1,6 @@
 import type {ActionFunction} from '@remix-run/node'
 
 import {json} from '@remix-run/node'
-import {XMLParser} from 'fast-xml-parser'
 import {asyncForEach} from '@arcath/utils'
 
 import {getPrisma} from '~/lib/prisma'
@@ -30,58 +29,54 @@ export const action: ActionFunction = async ({request}) => {
   }
 
   let read = await reader.read()
-  let xml = ''
+  let jsonData = ''
 
   while (!read.done) {
-    xml += read.value.toString()
+    jsonData += read.value.toString()
     read = await reader.read()
   }
 
-  const xmlParser = new XMLParser()
-
-  const xmlStudents = xmlParser.parse(xml)
+  const students = JSON.parse(jsonData) as {
+    name: string
+    username: string
+    upn: string
+    yearGroup: string
+    regGroup: string
+  }[]
 
   const prisma = getPrisma()
 
-  await asyncForEach<{
-    UPN: string
-    Forename: string
-    Surname: string
-    Primary_x0020_Email: string
-    Year: string
-    Reg: string
-  }>(xmlStudents.SuperStarReport.Record, async student => {
-    const [username] = student.Primary_x0020_Email.split('@').map(s =>
-      s.toLowerCase()
-    )
+  await asyncForEach(
+    students,
+    async ({username, upn, yearGroup, regGroup, name}) => {
+      const user = await prisma.user.findFirst({where: {username}})
 
-    const user = await prisma.user.findFirst({where: {username}})
+      if (user) {
+        user.username = username
+        user.name = name
+        user.upn = upn
+        user.type = 'STUDENT'
+        user.yearGroup = yearGroup
+        user.formGroup = regGroup
 
-    if (user) {
-      user.username = username
-      user.name = `${student.Forename} ${student.Surname}`
-      user.upn = student.UPN
-      user.type = 'STUDENT'
-      user.yearGroup = student.Year.toLowerCase().replace('  ', ' ')
-      user.formGroup = student.Reg.toLowerCase()
+        await prisma.user.update({where: {id: user.id}, data: user})
 
-      await prisma.user.update({where: {id: user.id}, data: user})
+        return
+      }
 
-      return
+      const newUser = {
+        username,
+        name,
+        upn,
+        type: 'STUDENT' as const,
+        yearGroup,
+        formGroup: regGroup
+      }
+
+      await prisma.user.create({data: newUser})
+      await log('Imports', `Added new student ${newUser.username}`)
     }
-
-    const newUser = {
-      username: username,
-      name: `${student.Forename} ${student.Surname}`,
-      upn: student.UPN,
-      type: 'STUDENT' as const,
-      yearGroup: student.Year.toLowerCase().replace('  ', ' '),
-      formGroup: student.Reg.toLowerCase()
-    }
-
-    await prisma.user.create({data: newUser})
-    await log('Imports', `Added new student ${newUser.username}`)
-  })
+  )
 
   return json({message: 'Success'}, 200)
 }

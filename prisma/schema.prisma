@@ -13,51 +13,38 @@ enum UserType {
 }
 
 model User {
-  id            Int              @id @default(autoincrement())
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @updatedAt
-  username      String
-  admin         Boolean          @default(false)
-  type          UserType         @default(STUDENT)
-  name          String           @default("")
-  upn           String           @default("")
-  yearGroup     String           @default("")
-  formGroup     String           @default("")
-  manual        Boolean          @default(false)
-  classesTaught Class[]
-  classSessions StudentSession[]
-  shortcuts     Shortcut[]
+  id               Int               @id @default(autoincrement())
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  username         String
+  admin            Boolean           @default(false)
+  type             UserType          @default(STUDENT)
+  name             String            @default("")
+  upn              String            @default("")
+  yearGroup        String            @default("")
+  formGroup        String            @default("")
+  manual           Boolean           @default(false)
+  classesTaught    Class[]
+  classMemberships ClassMembership[]
+  shortcuts        Shortcut[]
 }
 
 model Class {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  name      String    @unique()
-  teacher   User      @relation(fields: [teacherId], references: [id])
-  teacherId Int
-  sessions  Session[]
+  id          Int               @id @default(autoincrement())
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  name        String            @unique()
+  teacher     User              @relation(fields: [teacherId], references: [id])
+  teacherId   Int
+  memberships ClassMembership[]
 }
 
-model StudentSession {
-  id        Int     @id @default(autoincrement())
-  session   Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  sessionId Int
-  student   User    @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  studentId Int
-}
-
-model Session {
-  id        Int              @id @default(autoincrement())
-  name      String
-  createdAt DateTime         @default(now())
-  updatedAt DateTime         @updatedAt
-  startTime String
-  endTime   String
-  class     Class            @relation(fields: [classId], references: [id], onDelete: Cascade)
-  classId   Int
-  students  StudentSession[]
-  room      String           @default("")
+model ClassMembership {
+  id       Int   @id @default(autoincrement())
+  class    Class @relation(fields: [classId], references: [id], onDelete: Cascade)
+  classId  Int
+  member   User  @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  memberId Int
 }
 
 model Shortcut {

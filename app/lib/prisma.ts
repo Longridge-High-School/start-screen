@@ -67,25 +67,25 @@ export const getShortcutsForUser = async (
         })
         break
       case 'STUDENT':
-        const studenSessions = await prisma.studentSession.findMany({
-          select: {sessionId: true},
-          where: {studentId: user.id}
-        })
+        const studentClassIds = (
+          await prisma.classMembership.findMany({
+            select: {classId: true},
+            where: {memberId: user.id}
+          })
+        ).map(({classId}) => classId)
 
         scopes.push('student')
         scopes.push(user.yearGroup)
         scopes.push(user.formGroup)
 
-        const allSessions = await prisma.session.findMany({
-          where: {
-            id: {in: studenSessions.map(({sessionId}) => sessionId)}
-          },
-          include: {class: true}
+        const allClasses = await prisma.class.findMany({
+          select: {id: true, name: true},
+          where: {id: {in: studentClassIds}}
         })
 
-        allSessions.forEach(session => {
-          if (!scopes.includes(session.class.name.toLowerCase())) {
-            scopes.push(session.class.name.toLowerCase())
+        allClasses.forEach(({name}) => {
+          if (!scopes.includes(name.toLowerCase())) {
+            scopes.push(name.toLowerCase())
           }
         })
       default:

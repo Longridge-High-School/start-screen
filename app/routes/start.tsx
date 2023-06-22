@@ -1,12 +1,5 @@
 import type {LoaderFunction} from '@remix-run/node'
-import type {
-  User,
-  Session,
-  Class,
-  Shortcut,
-  Advert,
-  Doodle as DBDoodle
-} from '@prisma/client'
+import type {User, Shortcut, Advert, Doodle as DBDoodle} from '@prisma/client'
 import {useEffect} from 'react'
 import {diffArray, pick} from '@arcath/utils'
 
@@ -25,12 +18,8 @@ import {MDXComponent} from '~/lib/mdx'
 
 import {getSupplyLevels} from '~/lib/printers.server'
 
-import {getTimetableDay, getTimetableWeek} from '~/utils/get-timetable-day'
-
 interface LoaderData {
   user?: User
-  sessions?: Array<Session & {class: Class}>
-  day: string
   shortcuts: Shortcut[]
   title: string
   dateFormat: string
@@ -52,43 +41,6 @@ interface LoaderData {
 export const loader: LoaderFunction = async ({request}) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
   const prisma = getPrisma()
-
-  let sessions: Array<Session & {class: Class}> | undefined
-
-  const week = getTimetableWeek()
-  const day = getTimetableDay(week)
-
-  switch (user.type) {
-    case 'STAFF':
-      const classIds = await prisma.class.findMany({
-        select: {id: true, name: true},
-        where: {teacherId: user.id}
-      })
-
-      sessions = await prisma.session.findMany({
-        where: {
-          name: {startsWith: day},
-          classId: {in: classIds.map(({id}) => id)}
-        },
-        include: {class: true}
-      })
-      break
-    case 'STUDENT':
-      const studenSessions = await prisma.studentSession.findMany({
-        select: {sessionId: true},
-        where: {studentId: user.id}
-      })
-
-      sessions = await prisma.session.findMany({
-        where: {
-          id: {in: studenSessions.map(({sessionId}) => sessionId)},
-          name: {startsWith: day}
-        },
-        include: {class: true}
-      })
-    default:
-      break
-  }
 
   const {shortcuts, hasOverflow, scopes} = await getShortcutsForUser(
     user,
@@ -123,15 +75,26 @@ export const loader: LoaderFunction = async ({request}) => {
       ? adverts[Math.floor(Math.random() * adverts.length)]
       : null
 
+  const today = new Date()
+  const doodleDate = new Date(
+    `${today.getFullYear()}-${(today.getMonth() + 1)
+      .toString()
+      .padStart(2, '0')}-${today
+      .getDate()
+      .toString()
+      .padStart(2, '0')} 00:00:00+0000`
+  )
+
   const doodle = await prisma.doodle.findFirst({
-    where: {startDate: {lte: new Date()}, endDate: {gte: new Date()}},
+    where: {
+      startDate: {lte: doodleDate},
+      endDate: {gte: doodleDate}
+    },
     orderBy: {endDate: 'asc'}
   })
 
   return json<LoaderData>({
     user,
-    sessions,
-    day,
     shortcuts,
     title,
     dateFormat,
@@ -364,23 +327,6 @@ const StartPage = () => {
           })}
         </div>
       </div>
-    </div>
-  )
-}
-
-const TimetableSession: React.FC<{session?: Session & {class: Class}}> = ({
-  session
-}) => {
-  if (session === undefined) {
-    return <i className="p-3">Free</i>
-  }
-
-  return (
-    <div className="pl-3">
-      <span className="text-brand-dark">{session.class.name}</span>{' '}
-      <span className="text-right">{session.room}</span>
-      <br />
-      {session.startTime} - {session.endTime}
     </div>
   )
 }
