@@ -93,8 +93,6 @@ export const getShortcutsForUser = async (
     }
   }
 
-  console.dir(scopes)
-
   const shortcutIdsAndScopes = await prisma.shortcut.findMany({
     select: {id: true, scopes: true}
   })

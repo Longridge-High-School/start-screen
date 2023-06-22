@@ -1,7 +1,6 @@
 import type {ActionFunction} from '@remix-run/node'
 
 import {json} from '@remix-run/node'
-import {XMLParser} from 'fast-xml-parser'
 import {asyncForEach} from '@arcath/utils'
 
 import {getPrisma} from '~/lib/prisma'
@@ -30,33 +29,28 @@ export const action: ActionFunction = async ({request}) => {
   }
 
   let read = await reader.read()
-  let xml = ''
+  let jsonData = ''
 
   while (!read.done) {
-    xml += read.value.toString()
+    jsonData += read.value.toString()
     read = await reader.read()
   }
 
-  const xmlParser = new XMLParser()
-
-  const xmlStaff = xmlParser.parse(xml)
+  const staffMembers = JSON.parse(jsonData) as {
+    name: string
+    username: string
+  }[]
 
   const prisma = getPrisma()
 
-  asyncForEach<{
-    Title: string
-    Preferred_x0020_Surname: string
-    Staff_x0020_Code: string
-  }>(xmlStaff.SuperStarReport.Record, async staff => {
+  asyncForEach(staffMembers, async ({name, username}) => {
     const user = await prisma.user.findFirst({
-      where: {username: staff.Staff_x0020_Code.toLowerCase()}
+      where: {username}
     })
 
     if (user) {
-      user.username = staff.Staff_x0020_Code.toLowerCase()
-      user.name = `${staff.Title ? staff.Title : ''} ${
-        staff.Preferred_x0020_Surname
-      }`
+      user.username = username
+      user.name = name
       user.type = 'STAFF'
 
       await prisma.user.update({where: {id: user.id}, data: user})
@@ -65,18 +59,13 @@ export const action: ActionFunction = async ({request}) => {
     }
 
     const newUser = {
-      username: staff.Staff_x0020_Code.toLowerCase(),
-      name: `${staff.Title ? staff.Title : ''} ${
-        staff.Preferred_x0020_Surname
-      }`,
+      username,
+      name,
       type: 'STAFF' as const
     }
 
     await prisma.user.create({data: newUser})
-    await log(
-      'Imports',
-      `Added new staff member ${staff.Staff_x0020_Code.toLowerCase()}`
-    )
+    await log('Imports', `Added new staff member ${username}`)
   })
 
   return json({message: 'Success'}, 200)

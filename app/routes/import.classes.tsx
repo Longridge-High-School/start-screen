@@ -1,5 +1,4 @@
 import {type ActionArgs, json} from '@remix-run/node'
-import {XMLParser} from 'fast-xml-parser'
 import {asyncForEach, diffArray, indexedBy, keys} from '@arcath/utils'
 
 import {getPrisma} from '~/lib/prisma'
@@ -35,42 +34,22 @@ export const action = async ({request}: ActionArgs) => {
   }
 
   let read = await reader.read()
-  let xml = ''
+  let jsonData = ''
 
   while (!read.done) {
-    xml += read.value.toString()
+    jsonData += read.value.toString()
     read = await reader.read()
   }
 
-  const xmlParser = new XMLParser()
-
-  const xmlLessons = xmlParser.parse(xml)
-
   const prisma = getPrisma()
 
-  let className = ''
-
-  const classes: {
-    [className: string]: {name: string; teacher: string; students: string[]}
-  } = {}
-
-  xmlLessons.SuperStarReport.Record.forEach((lesson: ClassEntry) => {
-    if (lesson.Class !== undefined) {
-      className = lesson.Class
-
-      if (!classes[className] && lesson.Work_x0020_Email) {
-        classes[className] = {
-          name: className,
-          teacher: lesson.Work_x0020_Email,
-          students: []
-        }
-      }
+  const classes = JSON.parse(jsonData) as {
+    [className: string]: {
+      name: string
+      teacherUsername: string
+      students: string[]
     }
-
-    if (lesson.UPN && classes[className]) {
-      classes[className].students.push(lesson.UPN)
-    }
-  })
+  }
 
   const dbTeachers = await prisma.user.findMany({
     where: {type: 'STAFF'},
@@ -85,9 +64,7 @@ export const action = async ({request}: ActionArgs) => {
   const studentsByUPN = indexedBy('upn', dbStudents)
 
   await asyncForEach(keys(classes), async key => {
-    const {name, students, teacher} = classes[key]
-
-    const teacherUsername = teacher.split('@')[0]
+    const {name, students, teacherUsername} = classes[key]
 
     if (!teachersByUsername[teacherUsername]) {
       await log(
@@ -107,6 +84,10 @@ export const action = async ({request}: ActionArgs) => {
     })
 
     await asyncForEach(students, async upn => {
+      if (upn === null) {
+        return
+      }
+
       if (!studentsByUPN[upn]) {
         await log('Imports', `Could not find account for student ${upn}`)
 

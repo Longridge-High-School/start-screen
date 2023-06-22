@@ -13,6 +13,10 @@
   - [Branding](/admin/branding.md)
   - [Configuration](/admin/configuration)
 
+  - Data
+
+    - [Staff](/data/staff)
+
 - Guides
 
   - [Configuring Azure Application Proxy](/guides/configuring-aap)
