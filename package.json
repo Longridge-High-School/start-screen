@@ -24,7 +24,6 @@
     "color-string": "^1.9.1",
     "cross-env": "^7.0.3",
     "date-fns": "^2.30.0",
-    "fast-xml-parser": "^4.2.4",
     "framer-motion": "^10.12.16",
     "ldapjs": "^3.0.2",
     "mdx-bundler": "^9.2.1",
