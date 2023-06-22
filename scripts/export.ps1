@@ -14,9 +14,9 @@ param (
     $SIMSPassword
 )
 
-#& 'C:\Program Files (x86)\SIMS\SIMS .net\CommandReporter.exe' /USER:"$SIMSUser" /PASSWORD:"$SIMSPassword" /REPORT:"Connect Staff" /OUTPUT:"$env:TEMP\staff-code.xml"
-#& 'C:\Program Files (x86)\SIMS\SIMS .net\CommandReporter.exe' /USER:"$SIMSUser" /PASSWORD:"$SIMSPassword" /REPORT:"Connect Students" /OUTPUT:"$env:TEMP\students.xml"
-#& 'C:\Program Files (x86)\SIMS\SIMS .net\CommandReporter.exe' /USER:"$SIMSUser" /PASSWORD:"$SIMSPassword" /REPORT:"Connect Classes" /OUTPUT:"$env:TEMP\classes.xml"
+& 'C:\Program Files (x86)\SIMS\SIMS .net\CommandReporter.exe' /USER:"$SIMSUser" /PASSWORD:"$SIMSPassword" /REPORT:"Connect Staff" /OUTPUT:"$env:TEMP\staff-code.xml"
+& 'C:\Program Files (x86)\SIMS\SIMS .net\CommandReporter.exe' /USER:"$SIMSUser" /PASSWORD:"$SIMSPassword" /REPORT:"Connect Students" /OUTPUT:"$env:TEMP\students.xml"
+& 'C:\Program Files (x86)\SIMS\SIMS .net\CommandReporter.exe' /USER:"$SIMSUser" /PASSWORD:"$SIMSPassword" /REPORT:"Connect Classes" /OUTPUT:"$env:TEMP\classes.xml"
 
 $staffCodes = [xml](Get-Content -Path "$env:TEMP\staff-code.xml")
 $students = [xml](Get-Content -Path "$env:TEMP\students.xml")
@@ -48,7 +48,7 @@ $staffCodes.SuperStarReport.Record | ForEach {
 
 $staffJson = ConvertTo-JSON $staffData -Compress
 
-#Export-ToConnect -body $staffJson -url "$ConnectURL/import/staff"
+Export-ToConnect -body $staffJson -url "$ConnectURL/import/staff"
 
 $studentData = @()
 
@@ -64,7 +64,7 @@ $students.SuperStarReport.Record | ForEach {
 
 $studentJSON = ConvertTo-JSON $studentData -Compress
 
-#Export-ToConnect -body $studentJSON -url "$ConnectURL/import/students"
+Export-ToConnect -body $studentJSON -url "$ConnectURL/import/students"
 
 $classData = New-Object pscustomobject
 
