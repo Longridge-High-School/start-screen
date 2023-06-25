@@ -47,7 +47,7 @@ To avoid bloating the bundles some imports are provided from the app.
 A Great example of how MDX can be used is the Christmas 2022 Doodle from
 Longridge High.
 
-![LHS Christmas Doodle](../_media/guides/christmas-doodle.png)
+![LHS Christmas Doodle](/img/guides/christmas-doodle.png)
 
 As per the [Full Component](#a-full-component) example, we start with an empty
 div.

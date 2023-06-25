@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       app: ${{ steps.filter.outputs.app }}
+      docs: ${{ steps.filter.outputs.docs }}
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
@@ -42,6 +43,8 @@ jobs:
               - 'package-lock.json'
               - 'prisma/**'
               - 'public/**'
+            docs:
+              - 'docs/**'
 
   lint:
     name: ⬣ ESLint
@@ -157,3 +160,35 @@ jobs:
         run: |
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+  docs:
+    name: 📚 Docs
+    needs: [lint, typecheck]
+    if: ${{ needs.prepare.outputs.docs == 'true' }}
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v3
+
+      - name: 💾 Cache Node Modules (Docs)
+        id: node-cache-docs
+        uses: actions/cache@v3
+        with:
+          path: docs/node_modules
+          key: node-modules-docs-${{ hashFiles('docs/package-lock.json') }}
+
+      - name: ➡️ Move into Docs
+        run: cd docs
+
+      - name: 📥 Download deps
+        if: steps.node-cache-docs.outputs.cache-hit != 'true'
+        run: npm install
+
+      - name: 🏗️ Build Docs
+        run: npm run build
+
+      - name: 🚀 Deploy
+        run: npm run deploy

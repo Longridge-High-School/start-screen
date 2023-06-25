@@ -1,6 +1,6 @@
 # Star Wars Day
 
-![Star Wars Day Doodle](../../_media/examples/star-wars-doodle.png)
+![Star Wars Day Doodle](/img/examples/star-wars-doodle.png)
 
 The Star Wars day doodle uses the current users username to pick a lightsaber
 colour and side logo.

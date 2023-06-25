@@ -41,4 +41,4 @@ preview. This allows you to test any generation based on the username.
 
 ## Example Doodles
 
-- [Star Wars Day](/features/doodles/star-wars-day)
+- [Star Wars Day](/examples/doodles/star-wars-day)
