@@ -43,8 +43,10 @@ jobs:
               - 'package-lock.json'
               - 'prisma/**'
               - 'public/**'
+              - '.github/workflows/**'
             docs:
               - 'docs/**'
+              - '.github/workflows/**'
 
   lint:
     name: ⬣ ESLint
@@ -180,15 +182,12 @@ jobs:
           path: docs/node_modules
           key: node-modules-docs-${{ hashFiles('docs/package-lock.json') }}
 
-      - name: ➡️ Move into Docs
-        run: cd docs
-
       - name: 📥 Download deps
         if: steps.node-cache-docs.outputs.cache-hit != 'true'
-        run: npm install
+        run: cd docs && npm install
 
       - name: 🏗️ Build Docs
-        run: npm run build
+        run: cd docs && npm run build
 
       - name: 🚀 Deploy
-        run: npm run deploy
+        run: cd docs && npm run deploy
