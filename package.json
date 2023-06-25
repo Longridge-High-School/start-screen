@@ -69,6 +69,7 @@
     "public/build",
     "*.ignored/",
     "*.ignored.*",
-    "remix.env.d.ts"
+    "remix.env.d.ts",
+    "docs"
   ]
 }
