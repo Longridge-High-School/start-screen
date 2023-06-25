@@ -190,4 +190,7 @@ jobs:
         run: cd docs && npm run build
 
       - name: 🚀 Deploy
-        run: cd docs && npm run deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: docs/build
