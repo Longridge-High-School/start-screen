@@ -163,7 +163,7 @@ jobs:
 
   docs:
     name: 📚 Docs
-    needs: [lint, typecheck]
+    needs: [prepare]
     if: ${{ needs.prepare.outputs.docs == 'true' }}
     runs-on: ubuntu-latest
     concurrency:
