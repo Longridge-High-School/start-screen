@@ -7,7 +7,7 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production remix build",
     "dev": "cross-env NODE_ENV=development remix dev",
-    "docs": "docsify serve ./docs",
+    "docs": "npm run start --previf ./docs",
     "remix:dev": "remix dev",
     "postinstall": "remix setup node",
     "start": "cross-env NODE_ENV=production remix-serve build",
@@ -50,7 +50,6 @@
     "@types/react-dom": "^18.2.6",
     "@types/uuid": "^9.0.2",
     "autoprefixer": "^10.4.14",
-    "docsify-cli": "^4.4.4",
     "eslint": "^8.43.0",
     "eslint-config-prettier": "^8.8.0",
     "postcss": "^8.4.24",
