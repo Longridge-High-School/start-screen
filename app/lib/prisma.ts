@@ -26,12 +26,7 @@ export const getUser = async (username: string) => {
   return undefined
 }
 
-export const getShortcutsForUser = async (
-  user: User,
-  request: Request,
-  maximumPriority: number = 10,
-  prioritySort: boolean = true
-) => {
+export const getScopesForUser = async (user: User, request: Request) => {
   const scopes = ['all']
 
   const ip = request.headers.get('x-forwarded-for')
@@ -48,50 +43,59 @@ export const getShortcutsForUser = async (
     }
   }
 
-  if (user) {
-    scopes.push(user.username)
+  scopes.push(user.username)
 
-    switch (user.type) {
-      case 'STAFF':
-        const classIds = await prisma.class.findMany({
-          select: {id: true, name: true},
-          where: {teacherId: user.id}
+  switch (user.type) {
+    case 'STAFF':
+      const classIds = await prisma.class.findMany({
+        select: {id: true, name: true},
+        where: {teacherId: user.id}
+      })
+
+      scopes.push('staff')
+
+      classIds.forEach(({name}) => {
+        if (!scopes.includes(name.toLowerCase())) {
+          scopes.push(name.toLowerCase())
+        }
+      })
+      break
+    case 'STUDENT':
+      const studentClassIds = (
+        await prisma.classMembership.findMany({
+          select: {classId: true},
+          where: {memberId: user.id}
         })
+      ).map(({classId}) => classId)
 
-        scopes.push('staff')
+      scopes.push('student')
+      scopes.push(user.yearGroup)
+      scopes.push(user.formGroup)
 
-        classIds.forEach(({name}) => {
-          if (!scopes.includes(name.toLowerCase())) {
-            scopes.push(name.toLowerCase())
-          }
-        })
-        break
-      case 'STUDENT':
-        const studentClassIds = (
-          await prisma.classMembership.findMany({
-            select: {classId: true},
-            where: {memberId: user.id}
-          })
-        ).map(({classId}) => classId)
+      const allClasses = await prisma.class.findMany({
+        select: {id: true, name: true},
+        where: {id: {in: studentClassIds}}
+      })
 
-        scopes.push('student')
-        scopes.push(user.yearGroup)
-        scopes.push(user.formGroup)
-
-        const allClasses = await prisma.class.findMany({
-          select: {id: true, name: true},
-          where: {id: {in: studentClassIds}}
-        })
-
-        allClasses.forEach(({name}) => {
-          if (!scopes.includes(name.toLowerCase())) {
-            scopes.push(name.toLowerCase())
-          }
-        })
-      default:
-        break
-    }
+      allClasses.forEach(({name}) => {
+        if (!scopes.includes(name.toLowerCase())) {
+          scopes.push(name.toLowerCase())
+        }
+      })
+    default:
+      break
   }
+
+  return scopes
+}
+
+export const getShortcutsForUser = async (
+  user: User,
+  request: Request,
+  maximumPriority: number = 10,
+  prioritySort: boolean = true
+) => {
+  const scopes = await getScopesForUser(user, request)
 
   const shortcutIdsAndScopes = await prisma.shortcut.findMany({
     select: {id: true, scopes: true}

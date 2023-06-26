@@ -17,7 +17,9 @@ const AdminPage = () => {
   return (
     <div>
       <div className="w-full bg-white border-b-2 border-b-brand-dark flex gap-2">
-        <h1 className="text-xl text-brand-dark ml-4">Admin</h1>
+        <a href="/admin">
+          <h1 className="text-xl text-brand-dark ml-4">Admin</h1>
+        </a>
         <div className="grow leading-8 flex gap-4">
           <a href="/admin/config">Config</a>
           <a href="/admin/branding">Branding</a>

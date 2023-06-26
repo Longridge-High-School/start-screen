@@ -1,9 +1,18 @@
-import {type LoaderArgs, json} from '@remix-run/node'
-import {useLoaderData} from '@remix-run/react'
+import {type LoaderArgs, json, type ActionArgs} from '@remix-run/node'
+import {useLoaderData, useActionData} from '@remix-run/react'
+import {invariant} from '@arcath/utils'
 
 import {getUPNFromHeaders, getUserFromUPN} from '~/lib/user.server'
 
-import {getPrisma} from '~/lib/prisma'
+import {getPrisma, getScopesForUser} from '~/lib/prisma'
+
+import {
+  buttonClasses,
+  fieldsetClasses,
+  inputClasses,
+  labelClasses,
+  labelSpanClasses
+} from '~/lib/classes'
 
 export const loader = async ({request}: LoaderArgs) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
@@ -21,8 +30,35 @@ export const loader = async ({request}: LoaderArgs) => {
   return json({usersCount, doodlesCount, advertsCount})
 }
 
+export const action = async ({request}: ActionArgs) => {
+  const user = await getUserFromUPN(getUPNFromHeaders(request))
+
+  if (!user || !user.admin) {
+    throw new Response('Access Denied', {status: 403})
+  }
+
+  const prisma = getPrisma()
+
+  const formData = await request.formData()
+
+  const username = formData.get('username') as string | undefined
+
+  invariant(username)
+
+  const lookupUser = await prisma.user.findFirst({where: {username}})
+
+  if (lookupUser === null) {
+    return json({user: false})
+  }
+
+  const scopes = await getScopesForUser(lookupUser, request)
+
+  return json({user: lookupUser, scopes})
+}
+
 const AdminIndex = () => {
   const {usersCount, doodlesCount, advertsCount} = useLoaderData()
+  const data = useActionData<typeof action>()
 
   return (
     <div>
@@ -125,6 +161,40 @@ const AdminIndex = () => {
             <p>Adverts</p>
           </div>
         </div>
+      </div>
+      <div className="bg-white w-1/2 rounded-xl shadow p-2 m-auto mt-4">
+        <h1 className="text-2xl">User Lookup</h1>
+        <form method="POST" action="/admin?index">
+          <fieldset className={fieldsetClasses()}>
+            <label className={labelClasses()}>
+              <span className={labelSpanClasses()}>Username</span>
+              <input
+                type="text"
+                name="username"
+                placeholder="auser"
+                className={inputClasses()}
+              />
+            </label>
+            <div className={labelClasses()}>
+              <button className={buttonClasses()}>Lookup User</button>
+            </div>
+          </fieldset>
+        </form>
+        {data && data.user && typeof data.user !== 'boolean' ? (
+          <div>
+            <h2 className="text-xl">
+              {data.user.name} ({data.user.type})
+            </h2>
+            <h3 className="text-lg">Scopes</h3>
+            <ul>
+              {data.scopes.map((scope, i) => {
+                return <li key={i}>{scope}</li>
+              })}
+            </ul>
+          </div>
+        ) : (
+          ''
+        )}
       </div>
     </div>
   )
