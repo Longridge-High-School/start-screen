@@ -46,7 +46,7 @@ export const action: ActionFunction = async ({request}) => {
 
   const formData = await request.formData()
 
-  asyncForEach(keys(ConfigurableValues), async key => {
+  await asyncForEach(keys(ConfigurableValues), async key => {
     const value = formData.get(key) as string | undefined
 
     invariant(value)

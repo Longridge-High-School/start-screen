@@ -32,10 +32,17 @@ export const loader = async ({request}: LoaderArgs) => {
     () => getShortcutsForUser(user, request)
   )
 
-  const [title, dateFormat, logo, headerStrip] = await time(
+  const [title, dateFormat, logo, headerStrip, snowScript] = await time(
     'getConfig',
     'Get config from database',
-    () => getConfigValues(['title', 'dateFormat', 'logo', 'headerStripCache'])
+    () =>
+      getConfigValues([
+        'title',
+        'dateFormat',
+        'logo',
+        'headerStripCache',
+        'snowScript'
+      ])
   )
 
   const levels = await time(
@@ -99,7 +106,8 @@ export const loader = async ({request}: LoaderArgs) => {
       advert,
       logo,
       headerStrip,
-      doodle: doodle === null ? null : pick(doodle, ['bodyCache'])
+      doodle: doodle === null ? null : pick(doodle, ['bodyCache']),
+      snowScript
     },
     {
       headers: {'Server-Timing': getHeader(), test: 'foo'}
@@ -111,7 +119,7 @@ export const headers = ({loaderHeaders}: HeadersArgs) => {
   return loaderHeaders
 }
 
-/*const letItSnow = () => {
+const letItSnow = () => {
   if (typeof document !== 'undefined') {
     var embedimSnow = document.getElementById('embedim--snow')
     if (!embedimSnow) {
@@ -179,7 +187,7 @@ export const headers = ({loaderHeaders}: HeadersArgs) => {
       document.body.appendChild(embedimSnow)
     }
   }
-}*/
+}
 
 const StartPage = () => {
   const {
@@ -192,7 +200,8 @@ const StartPage = () => {
     advert,
     doodle,
     logo,
-    headerStrip
+    headerStrip,
+    snowScript
   } = useLoaderData<typeof loader>()
   const [searchParams] = useSearchParams()
   const buttonDelay = increment({
@@ -204,7 +213,9 @@ const StartPage = () => {
   })
 
   useEffect(() => {
-    //letItSnow()
+    if (snowScript === 'yes') {
+      letItSnow()
+    }
   })
 
   const newTab = searchParams.get('newtab') !== null

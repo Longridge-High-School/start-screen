@@ -104,6 +104,10 @@ export const ConfigDefaults = {
   analyticsDomain: {
     value: '',
     description: 'Hostname of a Plausible Analytics server.'
+  },
+  snowScript: {
+    value: 'no',
+    description: 'yes/no enable snow on the start page.'
   }
 } as const
 
