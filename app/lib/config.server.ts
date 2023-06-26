@@ -1,4 +1,4 @@
-import {omit} from '@arcath/utils'
+import {omit, indexedBy} from '@arcath/utils'
 
 import {getPrisma} from './prisma'
 
@@ -140,6 +140,27 @@ export const getConfigValue = async (key: keyof typeof ConfigDefaults) => {
   }
 
   return ConfigDefaults[key].value
+}
+
+export const getConfigValues = async (
+  keys: (keyof typeof ConfigDefaults)[]
+) => {
+  const prisma = getPrisma()
+
+  const dbr = await prisma.config.findMany({
+    select: {key: true, value: true},
+    where: {key: {in: keys}}
+  })
+
+  const keyIndex = indexedBy('key', dbr)
+
+  return keys.map(key => {
+    if (keyIndex[key]) {
+      return keyIndex[key].value
+    }
+
+    return ConfigDefaults[key].value
+  })
 }
 
 export const setConfigValue = async (

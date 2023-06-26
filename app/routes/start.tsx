@@ -1,5 +1,4 @@
-import type {LoaderFunction} from '@remix-run/node'
-import type {User, Shortcut, Advert, Doodle as DBDoodle} from '@prisma/client'
+import {type LoaderArgs, type HeadersArgs} from '@remix-run/node'
 import {useEffect} from 'react'
 import {diffArray, pick} from '@arcath/utils'
 
@@ -11,100 +10,105 @@ import {Button} from '~/lib/components/boxes/button'
 import {Intro} from '~/lib/components/boxes/intro'
 import {Doodle} from '~/lib/components/doodle'
 
-import {getConfigValue} from '~/lib/config.server'
+import {getConfigValues} from '~/lib/config.server'
 import {getUPNFromHeaders, getUserFromUPN} from '~/lib/user.server'
+import {createTimings} from '~/utils/timings.server'
+
 import {getPrisma, getShortcutsForUser} from '~/lib/prisma'
 import {MDXComponent} from '~/lib/mdx'
 
 import {getSupplyLevels} from '~/lib/printers.server'
 
-interface LoaderData {
-  user?: User
-  shortcuts: Shortcut[]
-  title: string
-  dateFormat: string
-  hasOverflow: boolean
-  levels: Array<{
-    name: string
-    staffOnly: boolean
-    black: number
-    cyan: number
-    magenta: number
-    yellow: number
-  }>
-  advert: Advert | null
-  logo: string
-  headerStrip: string
-  doodle: Pick<DBDoodle, 'bodyCache'> | null
-}
-
-export const loader: LoaderFunction = async ({request}) => {
-  const user = await getUserFromUPN(getUPNFromHeaders(request))
+export const loader = async ({request}: LoaderArgs) => {
+  const {time, getHeader} = createTimings()
+  const user = await time('getUser', 'Get User from header', () =>
+    getUserFromUPN(getUPNFromHeaders(request))
+  )
   const prisma = getPrisma()
 
-  const {shortcuts, hasOverflow, scopes} = await getShortcutsForUser(
-    user,
-    request
+  const {shortcuts, hasOverflow, scopes} = await time(
+    'getShortcutsForUser',
+    'Get shortcuts for the given user',
+    () => getShortcutsForUser(user, request)
   )
 
-  const title = await getConfigValue('title')
-  const dateFormat = await getConfigValue('dateFormat')
-  const logo = await getConfigValue('logo')
-  const headerStrip = await getConfigValue('headerStripCache')
+  const [title, dateFormat, logo, headerStrip] = await time(
+    'getConfig',
+    'Get config from database',
+    () => getConfigValues(['title', 'dateFormat', 'logo', 'headerStripCache'])
+  )
 
-  const levels = (await getSupplyLevels()).filter(({staffOnly}) => {
-    if (user.type !== 'STAFF') {
-      return !staffOnly
+  const levels = await time(
+    'getSupplyLevels',
+    'Get printer supply levels',
+    async () => {
+      return (await getSupplyLevels()).filter(({staffOnly}) => {
+        if (user.type !== 'STAFF') {
+          return !staffOnly
+        }
+
+        return true
+      })
     }
+  )
 
-    return true
-  })
+  const advert = await time('getAds', 'Get adverts', async () => {
+    const allAdverts = await prisma.advert.findMany({
+      where: {startDate: {lte: new Date()}, endDate: {gte: new Date()}}
+    })
 
-  const allAdverts = await prisma.advert.findMany({
-    where: {startDate: {lte: new Date()}, endDate: {gte: new Date()}}
-  })
+    const adverts = allAdverts.filter(({targets}) => {
+      const {common} = diffArray(targets, scopes)
 
-  const adverts = allAdverts.filter(({targets}) => {
-    const {common} = diffArray(targets, scopes)
+      return common.length > 0
+    })
 
-    return common.length > 0
-  })
-
-  const advert =
-    adverts.length > 0
+    return adverts.length > 0
       ? adverts[Math.floor(Math.random() * adverts.length)]
       : null
+  })
 
-  const today = new Date()
-  const doodleDate = new Date(
-    `${today.getFullYear()}-${(today.getMonth() + 1)
-      .toString()
-      .padStart(2, '0')}-${today
-      .getDate()
-      .toString()
-      .padStart(2, '0')} 00:00:00+0000`
-  )
+  const doodle = await time('getDoodle', 'Get doodle', async () => {
+    const today = new Date()
+    const doodleDate = new Date(
+      `${today.getFullYear()}-${(today.getMonth() + 1)
+        .toString()
+        .padStart(2, '0')}-${today
+        .getDate()
+        .toString()
+        .padStart(2, '0')} 00:00:00+0000`
+    )
 
-  const doodle = await prisma.doodle.findFirst({
-    where: {
-      startDate: {lte: doodleDate},
-      endDate: {gte: doodleDate}
+    return prisma.doodle.findFirst({
+      where: {
+        startDate: {lte: doodleDate},
+        endDate: {gte: doodleDate}
+      },
+      orderBy: {endDate: 'asc'}
+    })
+  })
+
+  return json(
+    {
+      user,
+      shortcuts,
+      title,
+      dateFormat,
+      levels,
+      hasOverflow,
+      advert,
+      logo,
+      headerStrip,
+      doodle: doodle === null ? null : pick(doodle, ['bodyCache'])
     },
-    orderBy: {endDate: 'asc'}
-  })
+    {
+      headers: {'Server-Timing': getHeader(), test: 'foo'}
+    }
+  )
+}
 
-  return json<LoaderData>({
-    user,
-    shortcuts,
-    title,
-    dateFormat,
-    levels,
-    hasOverflow,
-    advert,
-    logo,
-    headerStrip,
-    doodle: doodle === null ? null : pick(doodle, ['bodyCache'])
-  })
+export const headers = ({loaderHeaders}: HeadersArgs) => {
+  return loaderHeaders
 }
 
 /*const letItSnow = () => {
@@ -189,7 +193,7 @@ const StartPage = () => {
     doodle,
     logo,
     headerStrip
-  } = useLoaderData<LoaderData>()
+  } = useLoaderData<typeof loader>()
   const [searchParams] = useSearchParams()
   const buttonDelay = increment({
     increment: (current, count) => {
