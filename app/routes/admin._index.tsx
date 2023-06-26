@@ -48,7 +48,7 @@ export const action = async ({request}: ActionArgs) => {
   const lookupUser = await prisma.user.findFirst({where: {username}})
 
   if (lookupUser === null) {
-    return json({user: false})
+    return json({user: null})
   }
 
   const scopes = await getScopesForUser(lookupUser, request)
