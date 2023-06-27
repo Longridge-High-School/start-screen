@@ -40,3 +40,56 @@ anything.
 ## unifiHost
 
 The IP/hostname of the server running UniFi Controller.
+
+## unifiUser
+
+The Username to login to UniFi Controller with.
+
+## unifiPassword
+
+The password for the user to login to UniFi Controller.
+
+## unifiPort
+
+The port number to connect to UniFi Controller.
+
+## adDomainController
+
+The hostname of the domain controller to use for password resets.
+
+## adAdminDN
+
+The distinguished name of the admin user, this user should **only** have
+password reset delegated to it for the students OU.
+
+## adAdminPassword
+
+The password of the admin user.
+
+## adStudentsOU
+
+The OU to search for students in. The tool will only find users in this OU and
+below.
+
+## adAllowedUsers
+
+A comma seperated list of users who can reset password. This is the only list of
+users that can reset passwords, being and admin or staff member does not grant
+any permissions here.
+
+## guestWiFiSSID
+
+The SSID of your Guest Network
+
+## guestWiFiPSK
+
+The Pre-Shared key for your Guest Network.
+
+## analysticsDomain
+
+Set this to a [plausible analytics](https://plausible.io/) domain to enable
+analytics.
+
+## snowScript
+
+Set this to `yes` to enable a snow script on the start page.
