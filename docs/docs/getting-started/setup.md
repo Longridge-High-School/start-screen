@@ -19,3 +19,5 @@ After initial setup you will be redirected to the admin panel.
 ## Next Steps
 
 - [Apply your branding](/admin/branding)
+- [Import from your MIS](/guides/importing-from-your-mis)
+- [Deploy to your users](/getting-started/deploying-to-users)

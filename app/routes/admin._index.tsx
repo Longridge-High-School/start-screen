@@ -66,13 +66,19 @@ const AdminIndex = () => {
         <h1 className="text-3xl">Admin</h1>
         <div className="grid grid-cols-3 gap-2">
           <div className="col-span-3">
-            <p className="text-center">
+            <p className="text-center bg-brand-light rounded-xl p-2">
               Start Screen -{' '}
-              <a href="https://github.com/Longridge-High-School/start-screen">
+              <a
+                href="https://github.com/Longridge-High-School/start-screen"
+                className="text-black"
+              >
                 GitHub
               </a>{' '}
               -{' '}
-              <a href="https://longridge-high-school.github.io/start-screen/">
+              <a
+                href="https://longridge-high-school.github.io/start-screen/"
+                className="text-black"
+              >
                 Docs
               </a>
             </p>
