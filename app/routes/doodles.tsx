@@ -48,6 +48,16 @@ const Doodles = () => {
         ) : (
           ''
         )}
+        {user.admin ? (
+          <a
+            href="/admin/doodles"
+            className="bg-gray-200 rounded shadow w-full p-2 block mt-4 text-black text-center"
+          >
+            Manage Doodles
+          </a>
+        ) : (
+          ''
+        )}
         <a
           href="/start"
           className="bg-gray-200 rounded shadow w-full p-2 block mt-4 text-black text-center"
