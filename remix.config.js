@@ -15,7 +15,7 @@ module.exports = {
   tailwind: true,
   serverDependenciesToBundle: [
     /@arcath\/utils.*/,
-    'mdx-bundler',
+    /mdx-bundler.*/,
     /@uiw\/react-textarea-code-editor.*/,
     /rehype.*/,
     'unified',
