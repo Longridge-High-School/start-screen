@@ -108,7 +108,7 @@ export const loader = async ({request}: LoaderArgs) => {
       snowScript
     },
     {
-      headers: {'Server-Timing': getHeader(), test: 'foo'}
+      headers: {'Server-Timing': getHeader()}
     }
   )
 }
