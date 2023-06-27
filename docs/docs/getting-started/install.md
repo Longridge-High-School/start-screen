@@ -23,7 +23,7 @@ services:
     ports:
       - '5432:5432'
   remix:
-    image: longridgehighschool/start-screen:main
+    image: longridgehighschool/start-screen:latest
     restart: always
     ports:
       - '3000:3000'
