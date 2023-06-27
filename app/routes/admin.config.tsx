@@ -49,11 +49,13 @@ export const action: ActionFunction = async ({request}) => {
   await asyncForEach(keys(ConfigurableValues), async key => {
     const value = formData.get(key) as string | undefined
 
-    invariant(value)
+    if (ConfigurableValues[key].value !== '') {
+      invariant(value)
+    }
 
     const currentValue = await getConfigValue(key)
 
-    if (value !== currentValue) {
+    if (value !== currentValue && value !== undefined) {
       await setConfigValue(key, value)
     }
   })
