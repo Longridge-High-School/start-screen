@@ -21,7 +21,7 @@ Before you can create vouchers you need to set the following config values:
 
 Once set browse to `/wifi/guest`
 
-> There is no hard-coded link. Add a [shortcut](/features/shortcut) with select
+> There is no hard-coded link. Add a [shortcut](/features/shortcuts) with select
 > staff scoped in.
 
 Only _admins_ can create codes which get recorded in the database. A code can be
