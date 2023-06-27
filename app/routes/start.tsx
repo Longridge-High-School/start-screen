@@ -1,8 +1,6 @@
 import {type LoaderArgs, type HeadersArgs} from '@remix-run/node'
 import {useEffect} from 'react'
-import {diffArray, pick} from '@arcath/utils'
-
-import {increment} from '@arcath/utils'
+import {diffArray, pick, increment} from '@arcath/utils'
 import {json} from '@remix-run/node'
 import {useLoaderData, useCatch, useSearchParams} from '@remix-run/react'
 
