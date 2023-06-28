@@ -5,8 +5,8 @@
 Start Screen is distributed as a docker container and is best launched from the
 supplied `docker-compose.yml`.
 
-Create an empty folder for your install and create 3 folders, `icons`, `adverts`
-and `assets`.
+Create an empty folder for your install and create 4 folders, `db`, `icons`,
+`adverts` and `assets`.
 
 Create a `docker-compose.yml` that contains:
 
@@ -36,6 +36,14 @@ services:
     depends_on:
       - db
 ```
+
+> The docker tag `latest` will always be the latest
+> [release](https://github.com/Longridge-High-School/start-screen/releases). You
+> can pick a version using `{MAJOR}` to stay within the same major version e.g.
+> `2`, `{MAJOR}.{MINOR}` will stay within the same minor version e.g. `2.2` and
+> `{MAJOR}.{MINOR}.{PATCH}` will stay a specific version e.g. `2.2.0`.
+>
+> `main` will always be the current state of the `main` branch.
 
 Replace `POSTGRES_PASSWORD` with your chosen password, and update `DATABASE_URL`
 to match.
