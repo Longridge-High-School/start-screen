@@ -30,6 +30,67 @@ export const loader = async ({request}: LoaderArgs) => {
     () => getShortcutsForUser(user, request)
   )
 
+  const message = await time(
+    'getMessagesForUser',
+    'Get messages for the current user',
+    async () => {
+      const today = new Date()
+
+      const messageDate = new Date(
+        `${today.getFullYear()}-${(today.getMonth() + 1)
+          .toString()
+          .padStart(2, '0')}-${today
+          .getDate()
+          .toString()
+          .padStart(2, '0')} 00:00:00+0000`
+      )
+
+      const activeMessages = await prisma.infoMessage.findMany({
+        where: {
+          startDate: {lte: messageDate},
+          endDate: {gte: messageDate}
+        },
+        orderBy: {endDate: 'asc'}
+      })
+
+      const messages = activeMessages.filter(({scopes: messageScopes}) => {
+        const {common} = diffArray(scopes, messageScopes)
+
+        if (common.length > 0) {
+          return true
+        }
+
+        let matched = false
+
+        messageScopes.forEach(scope => {
+          if (scope[0] === '/') {
+            scopes.forEach(s => {
+              if (s === user?.username) {
+                return
+              }
+
+              const regex = new RegExp(scope.slice(1, -1))
+
+              const matches = regex.exec(s)
+
+              if (matches) {
+                matched = true
+              }
+            })
+          }
+        })
+
+        return matched
+      })
+
+      if (messages[0]) {
+        return messages[0]
+      }
+
+      return undefined
+    }
+  )
+
   const [title, dateFormat, logo, headerStrip, snowScript] = await time(
     'getConfig',
     'Get config from database',
@@ -105,10 +166,11 @@ export const loader = async ({request}: LoaderArgs) => {
       logo,
       headerStrip,
       doodle: doodle === null ? null : pick(doodle, ['bodyCache']),
-      snowScript
+      snowScript,
+      message
     },
     {
-      headers: {'Server-Timing': getHeader(), test: 'foo'}
+      headers: {'Server-Timing': getHeader()}
     }
   )
 }
@@ -199,7 +261,8 @@ const StartPage = () => {
     doodle,
     logo,
     headerStrip,
-    snowScript
+    snowScript,
+    message
   } = useLoaderData<typeof loader>()
   const [searchParams] = useSearchParams()
   const buttonDelay = increment({
@@ -218,6 +281,21 @@ const StartPage = () => {
 
   const newTab = searchParams.get('newtab') !== null
 
+  let messageColors = ''
+
+  if (message) {
+    switch (message.type) {
+      case 'Danger':
+        messageColors = 'bg-red-500 border-red-600'
+        break
+      case 'Warning':
+        messageColors = 'bg-yellow-500 border-yellow-600'
+        break
+      default:
+        messageColors = 'bg-blue-500 border-blue-600'
+    }
+  }
+
   return (
     <div>
       <div className="text-center bg-brand-dark text-white text-xl p-2">
@@ -227,6 +305,17 @@ const StartPage = () => {
           ''
         )}
       </div>
+      {message ? (
+        <a
+          className={`mx-4 mt-4 border-2 rounded-xl bg-opacity-75 p-1 block text-black ${messageColors}`}
+          href={message.target}
+        >
+          <strong>{message.title}</strong>
+          <p dangerouslySetInnerHTML={{__html: message.message}} />
+        </a>
+      ) : (
+        ''
+      )}
       <div className="grid grid-cols-2 2xl:grid-cols-5 p-4 gap-4">
         <Intro
           name={user ? user.name : undefined}

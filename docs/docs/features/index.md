@@ -8,6 +8,10 @@ Date-scoped MDX Components to brighten up the start page.
 
 Voucher code creation and logging for a UniFi Guest Network.
 
+## [Messages](/features/messages)
+
+Info messages that appear on the start page.
+
 ## [Pages](/features/pages)
 
 A full MDX based CMS for pages.

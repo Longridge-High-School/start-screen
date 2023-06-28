@@ -122,3 +122,20 @@ model Doodle {
   body      String
   bodyCache String
 }
+
+enum InfoMessageType {
+  Info
+  Warning
+  Danger
+}
+
+model InfoMessage {
+  id        Int             @id @default(autoincrement())
+  startDate DateTime
+  endDate   DateTime
+  title     String
+  message   String
+  target    String
+  type      InfoMessageType
+  scopes    String[]
+}

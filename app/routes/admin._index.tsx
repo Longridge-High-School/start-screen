@@ -138,6 +138,12 @@ const AdminIndex = () => {
             Doodles
           </a>
           <a
+            href="/admin/messages"
+            className="text-center border border-brand-dark rounded"
+          >
+            Info Messages
+          </a>
+          <a
             href="/admin/logs"
             className="text-center border border-brand-dark rounded"
           >
