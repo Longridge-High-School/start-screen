@@ -1,3 +1,6 @@
+-- CreateEnum
+CREATE TYPE "InfoMessageType" AS ENUM ('Info', 'Warning', 'Danger');
+
 -- CreateTable
 CREATE TABLE "InfoMessage" (
     "id" SERIAL NOT NULL,
@@ -6,6 +9,8 @@ CREATE TABLE "InfoMessage" (
     "title" TEXT NOT NULL,
     "message" TEXT NOT NULL,
     "target" TEXT NOT NULL,
+    "type" "InfoMessageType" NOT NULL,
+    "scopes" TEXT[],
 
     CONSTRAINT "InfoMessage_pkey" PRIMARY KEY ("id")
 );
