@@ -97,7 +97,7 @@ export const action = async ({request, params}: ActionArgs) => {
     })
   })
 
-  await log('Message', `Created new message ${title}`, user.username)
+  await log('Message', `Updated message ${title}`, user.username)
 
   return redirect('/admin/messages', {headers: {'Server-Timing': getHeader()}})
 }

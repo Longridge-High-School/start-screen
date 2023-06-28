@@ -70,6 +70,7 @@ const AdminMessages = () => {
                   <td>{type}</td>
                   <td>
                     <a href={`/admin/messages/edit/${id}`}>✏️</a>
+                    <a href={`/admin/messages/delete/${id}`}>🗑</a>
                   </td>
                 </tr>
               )
