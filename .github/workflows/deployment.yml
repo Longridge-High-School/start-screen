@@ -147,6 +147,7 @@ jobs:
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
             type=ref,event=branch
             type=ref,event=pr
             type=sha
@@ -200,6 +201,7 @@ jobs:
         run: cd docs && npm run build
 
       - name: 🚀 Deploy
+        if: ${{ github.ref == 'refs/heads/main' }}
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
