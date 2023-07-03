@@ -1,6 +1,7 @@
 import {getMDXComponent as gmc} from 'mdx-bundler/client'
 import {motion, useMotionValue, useTransform} from 'framer-motion'
 import {useMemo} from 'react'
+import * as dateFns from 'date-fns'
 
 import {useHydrated} from './hooks/use-hydrated'
 
@@ -17,7 +18,8 @@ export const getMDXComponent = (
     useMotionValue,
     useTransform,
     TickBox,
-    Button
+    Button,
+    dateFns
   })
 }
 
