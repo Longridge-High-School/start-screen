@@ -1,10 +1,17 @@
-import {type LoaderArgs, type ActionArgs, json, redirect} from '@remix-run/node'
+import {
+  type LoaderArgs,
+  type ActionArgs,
+  json,
+  redirect,
+  type HeadersArgs
+} from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
 import {invariant} from '@arcath/utils'
 import {format} from 'date-fns'
 
 import {getUPNFromHeaders, getUserFromUPN} from '~/lib/user.server'
 import {getPrisma} from '~/lib/prisma'
+import {createTimings, combineServerTimingHeaders} from '~/utils/timings.server'
 
 import {log} from '~/log.server'
 
@@ -18,7 +25,11 @@ import {
 } from '~/lib/classes'
 
 export const loader = async ({request}: LoaderArgs) => {
-  const user = await getUserFromUPN(getUPNFromHeaders(request))
+  const {time, getHeader} = createTimings()
+
+  const user = await time('getUser', 'Get User from header', () =>
+    getUserFromUPN(getUPNFromHeaders(request))
+  )
 
   if (!user || !user.admin) {
     throw new Response('Access Denied', {status: 403})
@@ -26,17 +37,24 @@ export const loader = async ({request}: LoaderArgs) => {
 
   const prisma = getPrisma()
 
-  const doodles = await prisma.doodle.findMany({orderBy: {name: 'asc'}})
+  const doodles = await time('getDoodles', 'Get Doodles', () =>
+    prisma.doodle.findMany({orderBy: {name: 'asc'}})
+  )
 
-  return json({doodles, user})
+  return json(
+    {doodles, user},
+    {
+      headers: {'Server-Timing': getHeader()}
+    }
+  )
 }
 
 export const action = async ({request}: ActionArgs) => {
-  const user = await getUserFromUPN(getUPNFromHeaders(request))
+  const {time, getHeader} = createTimings()
 
-  if (!user || !user.admin) {
-    throw new Response('Access Denied', {status: 403})
-  }
+  const user = await time('getUser', 'Get User from header', () =>
+    getUserFromUPN(getUPNFromHeaders(request))
+  )
 
   const formData = await request.formData()
 
@@ -50,19 +68,27 @@ export const action = async ({request}: ActionArgs) => {
 
   const prisma = getPrisma()
 
-  const doodle = await prisma.doodle.create({
-    data: {
-      name,
-      startDate: new Date(startDate),
-      endDate: new Date(endDate),
-      body: '',
-      bodyCache: ''
-    }
-  })
+  const doodle = await time('createDoodle', 'Create Doodle', () =>
+    prisma.doodle.create({
+      data: {
+        name,
+        startDate: new Date(startDate),
+        endDate: new Date(endDate),
+        body: '',
+        bodyCache: ''
+      }
+    })
+  )
 
   await log('Doodles', `Created new Doodle ${name}`, user.username)
 
-  return redirect(`/admin/doodles/edit/${doodle.id}`)
+  return redirect(`/admin/doodles/edit/${doodle.id}`, {
+    headers: {'Server-Timing': getHeader()}
+  })
+}
+
+export const headers = ({loaderHeaders, actionHeaders}: HeadersArgs) => {
+  return combineServerTimingHeaders(loaderHeaders, actionHeaders)
 }
 
 const AdminDoodles = () => {
