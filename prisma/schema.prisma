@@ -27,6 +27,7 @@ model User {
   classesTaught    Class[]
   classMemberships ClassMembership[]
   shortcuts        Shortcut[]
+  aupAccepted      Boolean           @default(false)
 }
 
 model Class {

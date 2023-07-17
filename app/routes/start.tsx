@@ -1,7 +1,11 @@
-import {type LoaderArgs, type HeadersArgs} from '@remix-run/node'
+import {
+  type LoaderArgs,
+  type HeadersArgs,
+  redirect,
+  json
+} from '@remix-run/node'
 import {useEffect} from 'react'
 import {diffArray, pick, increment} from '@arcath/utils'
-import {json} from '@remix-run/node'
 import {useLoaderData, useCatch, useSearchParams} from '@remix-run/react'
 
 import {Button} from '~/lib/components/boxes/button'
@@ -22,6 +26,11 @@ export const loader = async ({request}: LoaderArgs) => {
   const user = await time('getUser', 'Get User from header', () =>
     getUserFromUPN(getUPNFromHeaders(request))
   )
+
+  if (user.type === 'STUDENT' && !user.aupAccepted) {
+    return redirect('/aup')
+  }
+
   const prisma = getPrisma()
 
   const {shortcuts, hasOverflow, scopes} = await time(

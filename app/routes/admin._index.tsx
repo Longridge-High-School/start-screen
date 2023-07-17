@@ -144,6 +144,12 @@ const AdminIndex = () => {
             Info Messages
           </a>
           <a
+            href="/admin/aup"
+            className="text-center border border-brand-dark rounded"
+          >
+            Acceptable Use Policy
+          </a>
+          <a
             href="/admin/logs"
             className="text-center border border-brand-dark rounded"
           >
