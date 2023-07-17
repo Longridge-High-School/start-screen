@@ -12,7 +12,7 @@ import {Button} from '~/lib/components/boxes/button'
 import {Intro} from '~/lib/components/boxes/intro'
 import {Doodle} from '~/lib/components/doodle'
 
-import {getConfigValues} from '~/lib/config.server'
+import {getConfigValue, getConfigValues} from '~/lib/config.server'
 import {getUPNFromHeaders, getUserFromUPN} from '~/lib/user.server'
 import {createTimings} from '~/utils/timings.server'
 
@@ -27,7 +27,9 @@ export const loader = async ({request}: LoaderArgs) => {
     getUserFromUPN(getUPNFromHeaders(request))
   )
 
-  if (user.type === 'STUDENT' && !user.aupAccepted) {
+  const aupRequired = await getConfigValue('aupRequired')
+
+  if (aupRequired === 'yes' && user.type === 'STUDENT' && !user.aupAccepted) {
     return redirect('/aup')
   }
 

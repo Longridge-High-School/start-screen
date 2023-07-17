@@ -46,6 +46,7 @@ export const loader = async ({request}: LoaderArgs) => {
   }
 
   const aup = await getConfigValue('aup')
+  const aupRequired = await getConfigValue('aupRequired')
 
   const prisma = getPrisma()
 
@@ -61,7 +62,7 @@ export const loader = async ({request}: LoaderArgs) => {
   )
 
   return json(
-    {aup, user, usersCount, aupAcceptedCount},
+    {aup, user, usersCount, aupAcceptedCount, aupRequired},
     {
       headers: {'Server-Timing': getHeader()}
     }
@@ -82,6 +83,8 @@ export const action = async ({request}: ActionArgs) => {
   const formData = await request.formData()
 
   const body = formData.get('body') as string | undefined
+  const required = formData.get('required') as string | undefined
+  const reset = formData.get('reset') as string | undefined
 
   invariant(body)
 
@@ -89,6 +92,22 @@ export const action = async ({request}: ActionArgs) => {
 
   await setConfigValue('aup', body)
   await setConfigValue('aupCache', aupCache)
+  await setConfigValue('aupRequired', required === null ? 'no' : 'yes')
+
+  await log('AUP', 'Updated the AUP', user.username)
+
+  if (reset !== null) {
+    const prisma = getPrisma()
+
+    await time('resetUsers', 'Reset User AUP Signatures', () =>
+      prisma.user.updateMany({
+        data: {aupAccepted: false},
+        where: {type: 'STUDENT', aupAccepted: true}
+      })
+    )
+
+    await log('AUP', 'Reset AUP signatures', user.username)
+  }
 
   return redirect('/admin', {
     headers: {'Server-Timing': getHeader()}
@@ -100,7 +119,8 @@ export const headers = ({loaderHeaders, actionHeaders}: HeadersArgs) => {
 }
 
 const AdminAUP = () => {
-  const {aup, usersCount, aupAcceptedCount} = useLoaderData<typeof loader>()
+  const {aup, usersCount, aupAcceptedCount, aupRequired} =
+    useLoaderData<typeof loader>()
 
   const [body, setBody] = useState(aup)
 
@@ -143,6 +163,32 @@ const AdminAUP = () => {
                 setBody(e.target.value)
               }}
             />
+          </label>
+          <label className={labelClasses()}>
+            <span className={labelSpanClasses()}>Require AUP Signature</span>
+            <input
+              type="checkbox"
+              defaultChecked={aupRequired === 'yes'}
+              className={inputClasses()}
+              name="required"
+            />
+            <span className={labelInfoClasses()}>
+              If checked users that have not signed the AUP will be redirected
+              to it from the start screen.
+            </span>
+          </label>
+          <label className={labelClasses()}>
+            <span className={labelSpanClasses()}>Reset AUP Signatures</span>
+            <input
+              type="checkbox"
+              defaultChecked={false}
+              className={inputClasses()}
+              name="reset"
+            />
+            <span className={labelInfoClasses()}>
+              If checked all users will have their signatures reset and they
+              will be forced to re-sign the AUP.
+            </span>
           </label>
         </fieldset>
         <div className={labelClasses()}>

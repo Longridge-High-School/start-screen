@@ -116,6 +116,10 @@ export const ConfigDefaults = {
   aupCache: {
     value: '',
     description: 'The MDX cache of the acceptable use policy.'
+  },
+  aupRequired: {
+    value: 'no',
+    description: 'yes/no is the AUP required.'
   }
 } as const
 
@@ -127,7 +131,8 @@ export const ConfigurableValues = omit(ConfigDefaults, [
   'headerStrip',
   'headerStripCache',
   'aup',
-  'aupCache'
+  'aupCache',
+  'aupRequired'
 ])
 
 export type PrinterConfig = {
