@@ -115,7 +115,7 @@ const AdminPages = () => {
           </tbody>
         </table>
 
-        <form method="post">
+        <form method="post" action="/admin/pages">
           <fieldset className={fieldsetClasses()}>
             <label className={labelClasses()}>
               <span className={labelSpanClasses()}>Title</span>
