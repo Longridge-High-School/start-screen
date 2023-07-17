@@ -209,6 +209,11 @@ const AdminIndex = () => {
                 return <li key={i}>{scope}</li>
               })}
             </ul>
+            {data.user.type === 'STUDENT'
+              ? data.user.aupAccepted
+                ? 'Has signed the AUP'
+                : 'Has not signed the AUP'
+              : ''}
           </div>
         ) : (
           ''
