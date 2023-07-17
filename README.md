@@ -21,6 +21,7 @@ seamlessly connect.
 - Adverts
 - Printer Consumable Levels
 - Student Password Resets
+- AUP Acceptance
 
 ## Getting Started
 

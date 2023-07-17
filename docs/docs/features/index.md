@@ -1,5 +1,9 @@
 # Features
 
+## [Acceptable Use Policy](/features/acceptable-use-policy)
+
+Force users to read and sign an acceptable use policy.
+
 ## [Doodles](/features/doodles)
 
 Date-scoped MDX Components to brighten up the start page.

@@ -44,7 +44,8 @@ export const getUserFromUPN = async (upn: string) => {
       createdAt: new Date(),
       updatedAt: new Date(),
       formGroup: '',
-      manual: true
+      manual: true,
+      aupAccepted: true
     }
 
     return defaultUser
