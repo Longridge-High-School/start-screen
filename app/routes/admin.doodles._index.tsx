@@ -123,6 +123,8 @@ const AdminDoodles = () => {
                   <a href={`/admin/doodles/edit/${id}`}>✏</a>
                   <br />
                   <a href={`/admin/doodles/delete/${id}`}>🗑</a>
+                  <br />
+                  <a href={`/doodle/${id}`}>🔎</a>
                 </td>
               </tr>
             )
