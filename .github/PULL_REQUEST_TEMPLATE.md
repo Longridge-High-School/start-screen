@@ -1,4 +1,6 @@
-Does this PR cause start scren changes?: <!-- Even if your change can -->
+Does this PR cause start screen changes?:
+
+<!-- Answer yes here if this changes any aspect of the start screen. -->
 
 ## Checklist
 
