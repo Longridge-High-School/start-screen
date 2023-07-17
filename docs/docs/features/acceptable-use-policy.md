@@ -17,6 +17,7 @@ you to set:
   off).
 - Yes/No should all users have their AUP acceptance reset on save.
 - The DN of the group to **remove** users from.
+- The username of a user to reset thier AUP acceptance.
 
 ### Group DN
 

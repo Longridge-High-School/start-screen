@@ -87,22 +87,21 @@ export const action = async ({request}: ActionArgs) => {
   const required = formData.get('required') as string | undefined
   const reset = formData.get('reset') as string | undefined
   const group = formData.get('group') as string | undefined
+  const username = formData.get('username') as string | undefined
 
   invariant(body)
-  invariant(group)
 
   const aupCache = await compileMDX(body)
 
   await setConfigValue('aup', body)
   await setConfigValue('aupCache', aupCache)
   await setConfigValue('aupRequired', required === null ? 'no' : 'yes')
-  await setConfigValue('aupGroup', group)
+  await setConfigValue('aupGroup', group === undefined ? '' : group)
 
   await log('AUP', 'Updated the AUP', user.username)
 
+  const prisma = getPrisma()
   if (reset !== null) {
-    const prisma = getPrisma()
-
     await time('resetUsers', 'Reset User AUP Signatures', () =>
       prisma.user.updateMany({
         data: {aupAccepted: false},
@@ -111,6 +110,15 @@ export const action = async ({request}: ActionArgs) => {
     )
 
     await log('AUP', 'Reset AUP signatures', user.username)
+  }
+
+  if (username) {
+    await time('resetUser', 'Reset an users AUP signature', () =>
+      prisma.user.updateMany({
+        where: {username},
+        data: {aupAccepted: false}
+      })
+    )
   }
 
   return redirect('/admin', {
@@ -206,6 +214,13 @@ const AdminAUP = () => {
             <span className={labelInfoClasses()}>
               If set the user will be <b>removed</b> from the named group when
               they sign the AUP.
+            </span>
+          </label>
+          <label className={labelClasses()}>
+            <span className={labelSpanClasses()}>Reset User</span>
+            <input type="text" name="username" className={inputClasses()} />
+            <span className={labelInfoClasses()}>
+              If set the user will be required to resign the AUP.
             </span>
           </label>
         </fieldset>
