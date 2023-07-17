@@ -47,6 +47,7 @@ export const loader = async ({request}: LoaderArgs) => {
 
   const aup = await getConfigValue('aup')
   const aupRequired = await getConfigValue('aupRequired')
+  const aupGroup = await getConfigValue('aupGroup')
 
   const prisma = getPrisma()
 
@@ -62,7 +63,7 @@ export const loader = async ({request}: LoaderArgs) => {
   )
 
   return json(
-    {aup, user, usersCount, aupAcceptedCount, aupRequired},
+    {aup, user, usersCount, aupAcceptedCount, aupRequired, aupGroup},
     {
       headers: {'Server-Timing': getHeader()}
     }
@@ -85,14 +86,17 @@ export const action = async ({request}: ActionArgs) => {
   const body = formData.get('body') as string | undefined
   const required = formData.get('required') as string | undefined
   const reset = formData.get('reset') as string | undefined
+  const group = formData.get('group') as string | undefined
 
   invariant(body)
+  invariant(group)
 
   const aupCache = await compileMDX(body)
 
   await setConfigValue('aup', body)
   await setConfigValue('aupCache', aupCache)
   await setConfigValue('aupRequired', required === null ? 'no' : 'yes')
+  await setConfigValue('aupGroup', group)
 
   await log('AUP', 'Updated the AUP', user.username)
 
@@ -119,7 +123,7 @@ export const headers = ({loaderHeaders, actionHeaders}: HeadersArgs) => {
 }
 
 const AdminAUP = () => {
-  const {aup, usersCount, aupAcceptedCount, aupRequired} =
+  const {aup, usersCount, aupAcceptedCount, aupRequired, aupGroup} =
     useLoaderData<typeof loader>()
 
   const [body, setBody] = useState(aup)
@@ -187,7 +191,21 @@ const AdminAUP = () => {
             />
             <span className={labelInfoClasses()}>
               If checked all users will have their signatures reset and they
-              will be forced to re-sign the AUP.
+              will be forced to re-sign the AUP. This will not re-add them to
+              the group listed below.
+            </span>
+          </label>
+          <label className={labelClasses()}>
+            <span className={labelSpanClasses()}>AD Group</span>
+            <input
+              type="text"
+              name="group"
+              defaultValue={aupGroup}
+              className={inputClasses()}
+            />
+            <span className={labelInfoClasses()}>
+              If set the user will be <b>removed</b> from the named group when
+              they sign the AUP.
             </span>
           </label>
         </fieldset>

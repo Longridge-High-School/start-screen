@@ -120,6 +120,10 @@ export const ConfigDefaults = {
   aupRequired: {
     value: 'no',
     description: 'yes/no is the AUP required.'
+  },
+  aupGroup: {
+    value: '',
+    description: 'The group to remove users from after they sign.'
   }
 } as const
 
@@ -132,7 +136,8 @@ export const ConfigurableValues = omit(ConfigDefaults, [
   'headerStripCache',
   'aup',
   'aupCache',
-  'aupRequired'
+  'aupRequired',
+  'aupGroup'
 ])
 
 export type PrinterConfig = {

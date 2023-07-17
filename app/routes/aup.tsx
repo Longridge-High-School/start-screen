@@ -10,6 +10,12 @@ import {useState} from 'react'
 
 import {getUPNFromHeaders, getUserFromUPN} from '~/lib/user.server'
 import {getMDXComponent} from '~/lib/mdx'
+import {
+  findUserDN,
+  createClient,
+  createChange,
+  createAttribute
+} from '~/lib/ldap.server'
 
 import {getConfigValue} from '~/lib/config.server'
 
@@ -40,6 +46,41 @@ export const action = async ({request}: ActionArgs) => {
   )
 
   const prisma = getPrisma()
+
+  const aupGroupName = await getConfigValue('aupGroup')
+
+  if (aupGroupName !== '') {
+    const dc = await getConfigValue('adDomainController')
+    const adminDN = await getConfigValue('adAdminDN')
+    const adminPassword = await getConfigValue('adAdminPassword')
+    const studentsOU = await getConfigValue('adStudentsOU')
+    const groupDN = await getConfigValue('aupGroup')
+
+    const {client} = await createClient(dc, adminDN, adminPassword)
+
+    if (!client) {
+      throw new Response('Error connecting to LDAP', {status: 500})
+    }
+
+    const {dn} = await findUserDN(client, user.username, studentsOU)
+
+    if (!dn) {
+      throw new Response('Error finding user', {status: 500})
+    }
+
+    const change = createChange({
+      operation: 'delete',
+      modification: createAttribute('member', dn)
+    })
+
+    const result = await new Promise((resolve, reject) => {
+      client.modify(groupDN, [change], err => {
+        resolve(err)
+      })
+    })
+
+    client.unbind()
+  }
 
   await time('updateUser', 'Update User', () =>
     prisma.user.update({where: {id: user.id}, data: {aupAccepted: true}})
