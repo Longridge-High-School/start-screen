@@ -24,3 +24,7 @@ A full MDX based CMS for pages.
 
 Shortcuts that can be targeted to a given user/class/user type/ip location and
 more.
+
+## [System Status](/features/system-status)
+
+Component status with incidents.
