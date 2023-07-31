@@ -34,7 +34,7 @@ export const loader = async ({request, params}: LoaderArgs) => {
   const incident = await time('getIncident', 'Get Incident', () =>
     prisma.incident.findFirstOrThrow({
       where: {id: parseInt(params.incident!)},
-      include: {component: true, children: {orderBy: {createdAt: 'desc'}}}
+      include: {component: true, children: {orderBy: {createdAt: 'asc'}}}
     })
   )
 
@@ -111,7 +111,16 @@ const AdminSystemStatusIncidentComponentGroup = () => {
       <h2 className="text-xl">{incident.title}</h2>
       <p className="mb-2">{incident.message}</p>
       {incident.children.map(child => {
-        return <p key={child.id}>{child.message}</p>
+        return (
+          <p key={child.id}>
+            {child.message}{' '}
+            <a
+              href={`/admin/system-status/${incident.component.groupId}/${incident.component.id}/${child.id}/delete`}
+            >
+              🗑️
+            </a>
+          </p>
+        )
       })}
       <form
         method="post"

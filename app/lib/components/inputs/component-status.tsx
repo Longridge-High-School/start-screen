@@ -20,7 +20,7 @@ export const StateSelector = ({
         return (
           <div
             key={k}
-            className={`text-center p-2 cursor-pointer border  ${
+            className={`text-center p-2 cursor-pointer border text-sm ${
               state === k ? 'border-gray-200 rounded shadow' : 'border-white'
             }`}
             onClick={() => {

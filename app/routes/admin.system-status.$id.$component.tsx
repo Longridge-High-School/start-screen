@@ -2,6 +2,7 @@ import {type LoaderArgs, json, type ActionArgs, redirect} from '@remix-run/node'
 import {useLoaderData, Outlet} from '@remix-run/react'
 import {invariant} from '@arcath/utils'
 import {type ComponentState} from '@prisma/client'
+import {format} from 'date-fns'
 
 import {getUPNFromHeaders, getUserFromUPN} from '~/lib/user.server'
 import {getPrisma} from '~/lib/prisma'
@@ -34,7 +35,7 @@ export const loader = async ({request, params}: LoaderArgs) => {
   const component = await time('getComponent', 'Get Component', () =>
     prisma.component.findFirstOrThrow({
       where: {id: parseInt(params.component!)},
-      include: {incidents: true}
+      include: {incidents: {where: {parentId: null}}}
     })
   )
 
@@ -80,7 +81,7 @@ export const action = async ({request, params}: ActionArgs) => {
     })
   )
 
-  await time('updateIncident', 'Update Incident', () =>
+  await time('updateComponent', 'Update Component', () =>
     prisma.component.update({
       where: {id: parseInt(params.component!)},
       data: {state: status}
@@ -125,7 +126,16 @@ const SystemStatusGroupComponent = () => {
                       {incident.title}
                     </a>
                   </td>
-                  <td>{incident.createdAt}</td>
+                  <td>
+                    {format(new Date(incident.createdAt), 'do MMMM yyyy HH:mm')}
+                  </td>
+                  <td>
+                    <a
+                      href={`/admin/system-status/${component.groupId}/${component.id}/${incident.id}/delete`}
+                    >
+                      🗑️
+                    </a>
+                  </td>
                 </tr>
               )
             })}

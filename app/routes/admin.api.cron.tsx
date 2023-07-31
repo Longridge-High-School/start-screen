@@ -13,7 +13,7 @@ export const loader = async () => {
 
   await time('clearIncidents', 'Clear Incidents', () =>
     prisma.incident.deleteMany({
-      where: {open: false, updatedAt: {lte: subHours(new Date(), 0)}}
+      where: {open: false, updatedAt: {lte: subHours(new Date(), 24)}}
     })
   )
   results['Incident Clean Up'] = 'Success'
