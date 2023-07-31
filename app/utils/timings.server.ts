@@ -26,3 +26,12 @@ export const createTimings = () => {
 
   return {time, getHeader}
 }
+
+export const combineServerTimingHeaders = (
+  headers1: Headers,
+  headers2: Headers
+) => {
+  const newHeaders = new Headers(headers1)
+  newHeaders.append('Server-Timing', headers2.get('Server-Timing') ?? '')
+  return newHeaders
+}

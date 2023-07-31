@@ -108,6 +108,22 @@ export const ConfigDefaults = {
   snowScript: {
     value: 'no',
     description: 'yes/no enable snow on the start page.'
+  },
+  aup: {
+    value: '',
+    description: 'The Acceptable use Policy'
+  },
+  aupCache: {
+    value: '',
+    description: 'The MDX cache of the acceptable use policy.'
+  },
+  aupRequired: {
+    value: 'no',
+    description: 'yes/no is the AUP required.'
+  },
+  aupGroup: {
+    value: '',
+    description: 'The group to remove users from after they sign.'
   }
 } as const
 
@@ -117,7 +133,11 @@ export const ConfigurableValues = omit(ConfigDefaults, [
   'brandDark',
   'brandLight',
   'headerStrip',
-  'headerStripCache'
+  'headerStripCache',
+  'aup',
+  'aupCache',
+  'aupRequired',
+  'aupGroup'
 ])
 
 export type PrinterConfig = {

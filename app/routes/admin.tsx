@@ -31,6 +31,7 @@ const AdminPage = () => {
           <a href="/admin/assets">Assets</a>
           <a href="/admin/doodles">Doodles</a>
           <a href="/admin/messages">Info Messages</a>
+          <a href="/admin/aup">Acceptable Use Policy</a>
           <a href="/admin/logs">Logs</a>
           <a href="/admin/debug">Debug Headers</a>
         </div>

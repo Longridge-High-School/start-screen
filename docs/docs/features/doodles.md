@@ -39,6 +39,12 @@ on those screen resolutions.
 The current users username is passed to the doodle through the text box on the
 preview. This allows you to test any generation based on the username.
 
+## Previewing Doodles
+
+From the Doodle list in the admin panel click the magnifying glass `🔎` to be
+taken to the preview page for the Doodle. This link is public so can be sent to
+anyone. Doodles do not have to be released to appear here.
+
 ## Example Doodles
 
 - [Star Wars Day](/examples/doodles/star-wars-day)

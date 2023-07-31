@@ -28,7 +28,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: node_modules
-          key: node-modules-${{ hashFiles('package-lock.json') }}
+          key:
+            node-modules-${{ hashFiles('package-lock.json',
+            'prisma/schema.prisma') }}
 
       - name: 📥 Download deps
         if: steps.node-cache.outputs.cache-hit != 'true'
@@ -74,7 +76,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: node_modules
-          key: node-modules-${{ hashFiles('package-lock.json') }}
+          key:
+            node-modules-${{ hashFiles('package-lock.json',
+            'prisma/schema.prisma') }}
 
       - name: 🔬 Lint
         run: npm run lint
@@ -103,7 +107,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: node_modules
-          key: node-modules-${{ hashFiles('package-lock.json') }}
+          key:
+            node-modules-${{ hashFiles('package-lock.json',
+            'prisma/schema.prisma') }}
 
       - name: 🔎 Type check
         run: npm run typecheck
@@ -116,7 +122,7 @@ jobs:
       'refs/tags/v') }}
     runs-on: ubuntu-latest
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
+      group: ${{ github.workflow }}-${{ github.ref }}-docker
       cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
     steps:
       - name: ⬇️ Checkout repo
@@ -180,7 +186,7 @@ jobs:
     if: ${{ needs.prepare.outputs.docs == 'true' }}
     runs-on: ubuntu-latest
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
+      group: ${{ github.workflow }}-${{ github.ref }}-docs
       cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
     steps:
       - name: ⬇️ Checkout repo

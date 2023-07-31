@@ -150,6 +150,12 @@ const AdminIndex = () => {
             System Status
           </a>
           <a
+            href="/admin/aup"
+            className="text-center border border-brand-dark rounded"
+          >
+            Acceptable Use Policy
+          </a>
+          <a
             href="/admin/logs"
             className="text-center border border-brand-dark rounded"
           >
@@ -209,6 +215,11 @@ const AdminIndex = () => {
                 return <li key={i}>{scope}</li>
               })}
             </ul>
+            {data.user.type === 'STUDENT'
+              ? data.user.aupAccepted
+                ? 'Has signed the AUP'
+                : 'Has not signed the AUP'
+              : ''}
           </div>
         ) : (
           ''

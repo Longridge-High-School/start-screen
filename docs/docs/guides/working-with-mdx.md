@@ -42,6 +42,14 @@ To avoid bloating the bundles some imports are provided from the app.
 | `import useHydrated from 'lib-hooks-use-hydrated'` | The `useHydrated` React hook which returns `true` on the client. |
 | `import currentUser from 'data-current-user'`      | The current users username.                                      |
 
+## Variables
+
+Some components/utils are provided as variables to MDX.
+
+| Variable  | Provides        |
+| :-------- | :-------------- |
+| `dateFns` | All of date-fns |
+
 ## Merry Christmas
 
 A Great example of how MDX can be used is the Christmas 2022 Doodle from
