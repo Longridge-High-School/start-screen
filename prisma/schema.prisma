@@ -166,6 +166,8 @@ model Component {
   group            ComponentGroup @relation(fields: [groupId], references: [id])
   groupId          Int
   incidents        Incident[]
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @default(now()) @updatedAt
 }
 
 model Incident {

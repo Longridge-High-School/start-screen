@@ -7,9 +7,9 @@ import {
 import {useEffect} from 'react'
 import {diffArray, pick, increment} from '@arcath/utils'
 import {useLoaderData, useCatch, useSearchParams} from '@remix-run/react'
+import {format} from 'date-fns'
 
 import {Button} from '~/lib/components/boxes/button'
-import {Intro} from '~/lib/components/boxes/intro'
 import {Doodle} from '~/lib/components/doodle'
 
 import {getConfigValue, getConfigValues} from '~/lib/config.server'
@@ -20,6 +20,8 @@ import {getPrisma, getShortcutsForUser} from '~/lib/prisma'
 import {MDXComponent} from '~/lib/mdx'
 
 import {getSupplyLevels} from '~/lib/printers.server'
+
+import { COMPONENT_STATUS } from '~/utils/constants'
 
 export const loader = async ({request}: LoaderArgs) => {
   const {time, getHeader} = createTimings()
@@ -165,6 +167,14 @@ export const loader = async ({request}: LoaderArgs) => {
     })
   })
 
+  const components = await time('getComponents', 'Get Components', async () => {
+    if(user.type !== 'STAFF'){
+      return []
+    }
+
+    return prisma.component.findMany({select: {id: true, state: true, name: true}, orderBy: {updatedAt: 'asc'}, take: 10})
+  })
+
   return json(
     {
       user,
@@ -178,7 +188,8 @@ export const loader = async ({request}: LoaderArgs) => {
       headerStrip,
       doodle: doodle === null ? null : pick(doodle, ['bodyCache']),
       snowScript,
-      message
+      message,
+      components
     },
     {
       headers: {'Server-Timing': getHeader()}
@@ -273,7 +284,8 @@ const StartPage = () => {
     logo,
     headerStrip,
     snowScript,
-    message
+    message,
+    components
   } = useLoaderData<typeof loader>()
   const [searchParams] = useSearchParams()
   const buttonDelay = increment({
@@ -328,12 +340,52 @@ const StartPage = () => {
         ''
       )}
       <div className="grid grid-cols-2 2xl:grid-cols-5 p-4 gap-4">
-        <Intro
-          name={user ? user.name : undefined}
-          title={title}
-          dateFormat={dateFormat}
-          logo={logo}
+      <div className="col-span-1 text-center bg-white rounded shadow xl:col-span-2">
+      <img src={logo} className="w-32 mx-auto pt-4" alt="Logo" />
+
+      <h1
+        className="text-brand-dark text-5xl leading-[4rem] font-bold [text-shadow:0_14px_18px_rgba(0,0,0,0.12)] mb-5"
+        dangerouslySetInnerHTML={{__html: title}}
+      />
+      {user.name ? (
+        <h2 className="text-brand-dark text-xl font-bold mb-3">{user.name}</h2>
+      ) : (
+        ''
+      )}
+      <form
+        action="https://www.google.com/search"
+        method="GET"
+        className="grid grid-cols-6 gap-2 p-2"
+      >
+        <img
+          src="/img/google.jpg"
+          className="h-16 col-span-2 xl:col-span-1"
+          alt="Google Logo"
         />
+        <input
+          type="search"
+          className="border border-black rounded w-full col-span-4 md:col-span-3 xl:col-span-4 my-2 p-2"
+          name="q"
+        />
+        <button
+          type="submit"
+          className="bg-gray-200 rounded m-2 border-2 border-gray-200 hover:border-gray-400 col-span-6 md:col-span-1"
+        >
+          Google Search
+        </button>
+      </form>
+      <h3 className="text-lg text-brand-light font-bold mb-2">
+        {format(new Date(), dateFormat)}
+      </h3>
+      {components.length > 0 ? <div className="grid-cols-3 grid p-2">
+        <div className="col-span-2 flex flex-row gap-2 text-xl">
+          {components.map(({id, state}) => {
+            return <div key={id} className="grow text-center">{COMPONENT_STATUS[state].icon}</div>
+          })}
+        </div>
+        <a href="/system-status">System Status</a>
+      </div> : ''}
+    </div>
         <div className="col-span-1 2xl:col-span-2 row-span-2 2xl:row-span-3">
           <div className="grid grid-cols-2 gap-4">
             {shortcuts.map(shortcut => {

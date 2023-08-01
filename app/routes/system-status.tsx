@@ -14,6 +14,11 @@ export const loader = async ({request}: LoaderArgs) => {
   const user = await time('getUser', 'Get User from header', () =>
     getUserFromUPN(getUPNFromHeaders(request))
   )
+
+  if(user.type !== 'STAFF'){
+    throw new Response('Access Denied', {status: 403})
+  }
+
   const prisma = getPrisma()
 
   const componentGroups = await time(
@@ -24,6 +29,7 @@ export const loader = async ({request}: LoaderArgs) => {
         orderBy: {order: 'asc'},
         include: {
           components: {
+            select: {id: true, name: true, state: true},
             orderBy: {name: 'asc'}
           }
         }
@@ -136,7 +142,7 @@ const ComponentGroup = ({
   defaultExpanded
 }: {
   name: string
-  components: Component[]
+  components: Pick<Component, "id" | "name" | "state">[]
   defaultExpanded: boolean
 }) => {
   const [expanded, setExpanded] = useState(defaultExpanded)
