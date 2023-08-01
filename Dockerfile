@@ -2,7 +2,7 @@
 FROM node:20-bullseye-slim as base
 
 # Install openssl for Prisma
-RUN apt-get update && apt-get install -y openssl
+RUN apt-get update && apt-get install -y openssl postgresql-client
 
 # Install all node_modules, including dev dependencies
 FROM base as deps
