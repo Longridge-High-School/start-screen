@@ -34,6 +34,7 @@ const AdminPage = () => {
           <a href="/admin/aup">Acceptable Use Policy</a>
           <a href="/admin/logs">Logs</a>
           <a href="/admin/debug">Debug Headers</a>
+          <a href="/admin/backup">Backup</a>
         </div>
         <a href="/start" className="leading-8 mr-4">
           Back

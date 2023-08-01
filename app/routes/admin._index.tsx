@@ -161,6 +161,12 @@ const AdminIndex = () => {
           >
             Debug Headers
           </a>
+          <a
+            href="/admin/backup"
+            className="text-center border border-brand-dark rounded"
+          >
+            Backup
+          </a>
         </div>
       </div>
       <div className="bg-white w-1/2 rounded-xl shadow p-2 m-auto mt-4">
