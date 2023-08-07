@@ -75,6 +75,9 @@ const AdminBackup = () => {
       <div className="bg-white rounded-xl shadow p-2">
         <h2 className="text-3xl mb-2">Restore</h2>
         <p className="mb-2">Restore a backup zip file to the system.</p>
+        <p className="mb-2 p-1 bg-red-300 rounded">
+          This is in early testing, be careful restoring.
+        </p>
         <form
           action="/admin/restore"
           method="POST"
