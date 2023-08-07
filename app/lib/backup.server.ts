@@ -3,6 +3,7 @@ import path from 'path'
 import fs from 'fs'
 import AdmZip from 'adm-zip'
 import {asyncForEach} from '@arcath/utils'
+import {mkdirp} from 'mkdirp'
 
 const {unlink, readdir, rename, rm} = fs.promises
 
@@ -12,6 +13,8 @@ const ADVERTS_PATH = path.join(process.cwd(), 'public', 'adverts')
 const ICONS_PATH = path.join(process.cwd(), 'public', 'icons')
 
 export const backup = async () => {
+  await mkdirp(BACKUPS_DIR)
+
   const matches = RegExp(
     /^postgresql:\/\/(?<username>.*?):(?<password>.*?)@(?<host>.*?):(?<port>[0-9]*?)\/(?<db>[a-z-_]*)/g
   ).exec(process.env.DATABASE_URL!)
@@ -57,6 +60,8 @@ export const backup = async () => {
 }
 
 export const restore = async (filePath: string) => {
+  await mkdirp(BACKUPS_DIR)
+
   const zip = new AdmZip(filePath)
 
   zip.extractAllTo(path.join(BACKUPS_DIR, 'restore'))
