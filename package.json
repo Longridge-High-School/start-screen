@@ -6,7 +6,10 @@
   "sideEffects": false,
   "scripts": {
     "build": "cross-env NODE_ENV=production remix build",
+    "build:docker": "docker build . --tag=dev/start-screen",
     "dev": "cross-env NODE_ENV=development remix dev",
+    "dev:docker": "docker run -d --env-file .env.docker --name start-screen-dev -p 3000:3000 dev/start-screen",
+    "dev:docker:stop": "docker stop start-screen-dev && docker rm start-screen-dev",
     "remix:dev": "remix dev",
     "postinstall": "remix setup node",
     "start": "cross-env NODE_ENV=production remix-serve build",
