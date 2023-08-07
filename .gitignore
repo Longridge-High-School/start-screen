@@ -7,4 +7,6 @@ node_modules
 /public/adverts
 /public/assets
 .env
+.env*
 /data
+/public/backups

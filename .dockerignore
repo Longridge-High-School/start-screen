@@ -1,6 +1,12 @@
 docs/
 scripts/
 .github/
+data/
+.cache/
+build/
+node_modules/
 
 prettier.config.js
 .eslintrc.js
+.env
+docker-compose.*.yaml
