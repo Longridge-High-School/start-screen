@@ -8,7 +8,7 @@ import {getPrisma} from '~/lib/prisma'
 
 import {backup} from '~/lib/backup.server'
 
-import {buttonClasses} from '~/lib/classes'
+import {buttonClasses, labelClasses, labelSpanClasses} from '~/lib/classes'
 
 export const loader = async ({request}: LoaderArgs) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
@@ -43,33 +43,52 @@ const AdminBackup = () => {
   const actionData = useActionData<typeof action>()
 
   return (
-    <div className="bg-white w-1/2 rounded-xl shadow p-2 m-auto mt-4">
-      <h2 className="text-3xl mb-2">Backups</h2>
-      <p className="mb-2">Use the button below to generate a backup</p>
-      <Form
-        action="/admin/backup"
-        method="POST"
-        onSubmit={() => setSubmitted(true)}
-      >
-        <button
-          className={buttonClasses('bg-green-300', ['disabled:bg-gray-300'])}
-          disabled={submitted}
+    <div className="grid grid-cols-2 gap-4 w-3/4 m-auto mt-4">
+      <div className="bg-white rounded-xl shadow p-2">
+        <h2 className="text-3xl mb-2">Backup</h2>
+        <p className="mb-2">Use the button below to generate a backup.</p>
+        <Form
+          action="/admin/backup"
+          method="POST"
+          onSubmit={() => setSubmitted(true)}
         >
-          Backup
-        </button>
-      </Form>
-      {actionData && actionData.result ? (
-        <p className="mt-4 mb-2">
-          <a
-            href="/backups/backup.zip"
-            className={buttonClasses('bg-blue-300')}
+          <button
+            className={buttonClasses('bg-green-300', ['disabled:bg-gray-300'])}
+            disabled={submitted}
           >
-            Download
-          </a>
-        </p>
-      ) : (
-        ''
-      )}
+            Backup
+          </button>
+        </Form>
+        {actionData && actionData.result ? (
+          <p className="mt-4 mb-2">
+            <a
+              href="/backups/backup.zip"
+              className={buttonClasses('bg-blue-300')}
+            >
+              Download
+            </a>
+          </p>
+        ) : (
+          ''
+        )}
+      </div>
+      <div className="bg-white rounded-xl shadow p-2">
+        <h2 className="text-3xl mb-2">Restore</h2>
+        <p className="mb-2">Restore a backup zip file to the system.</p>
+        <form
+          action="/admin/restore"
+          method="POST"
+          encType="multipart/form-data"
+        >
+          <label className={labelClasses()}>
+            <span className={labelSpanClasses()}>Upload Backup</span>
+            <input type="file" name="file" placeholder="backup.zip" />
+          </label>
+          <div className={labelClasses()}>
+            <button className={buttonClasses()}>Restore Backup</button>
+          </div>
+        </form>
+      </div>
     </div>
   )
 }

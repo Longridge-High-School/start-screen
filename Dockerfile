@@ -1,5 +1,5 @@
 # base node image
-FROM node:20-bullseye-slim as base
+FROM node:20-bookworm-slim as base
 
 # Install openssl for Prisma
 RUN apt-get update && apt-get install -y openssl postgresql-client
