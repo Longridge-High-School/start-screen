@@ -13,7 +13,7 @@ const ICONS_PATH = path.join(process.cwd(), 'public', 'icons')
 
 export const backup = async () => {
   const matches = RegExp(
-    /^postgresql:\/\/(?<username>.*?):(?<password>.*?)@(?<host>.*?):(?<port>[0-9]*?)\/(?<db>.*?)$/g
+    /^postgresql:\/\/(?<username>.*?):(?<password>.*?)@(?<host>.*?):(?<port>[0-9]*?)\/(?<db>[a-z-_]*)/g
   ).exec(process.env.DATABASE_URL!)
 
   const {username, password, host, port, db} = matches!.groups!
