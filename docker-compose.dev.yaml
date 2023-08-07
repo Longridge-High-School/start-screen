@@ -1,0 +1,11 @@
+version: '3.9'
+services:
+  db:
+    image: postgres:14
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: pgdev
+    volumes:
+      - ./data/pg:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
