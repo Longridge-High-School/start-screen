@@ -23,7 +23,7 @@ export const backup = async () => {
 
   await new Promise((resolve, reject) => {
     exec(
-      `pg_dump -U ${username} -d ${db} -h ${host} -p ${port} > "${BACKUPS_DIR}/db.sql"`,
+      `pg_dump -Fc -U ${username} -d ${db} -h ${host} -p ${port} > "${BACKUPS_DIR}/db.dump"`,
       {env: {PGPASSWORD: password, NODE_ENV: process.env.NODE_ENV}},
       (error, stdout) => {
         console.dir([error, stdout])
@@ -104,11 +104,11 @@ export const restore = async (filePath: string) => {
 
   await new Promise((resolve, reject) => {
     exec(
-      `pg_restore -U ${username} -d ${db} -h ${host} -p ${port} < "${path.join(
+      `pg_restore -C -U ${username} -d ${db} -h ${host} -p ${port} < "${path.join(
         BACKUPS_DIR,
         'restore',
         'db.sql'
-      )}/db.sql"`,
+      )}"`,
       {env: {PGPASSWORD: password, NODE_ENV: process.env.NODE_ENV}},
       (error, stdout) => {
         console.dir([error, stdout])

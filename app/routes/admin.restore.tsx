@@ -21,7 +21,7 @@ export const action = async ({request}: ActionArgs) => {
 
   const uploadHandler = unstable_composeUploadHandlers(
     unstable_createFileUploadHandler({
-      maxPartSize: 5_000_000,
+      maxPartSize: 20_000_000,
       directory: 'public/backups/',
       file: ({filename}) => {
         return filename
