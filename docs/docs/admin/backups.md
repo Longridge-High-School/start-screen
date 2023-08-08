@@ -20,3 +20,8 @@ Select your backup and hit restore.
 This will clear all your assets, adverts and shortcut icons and copy over the
 files in the backup. It will then do a full restore of the database which will
 overwrite your current database.
+
+### Known Limitations
+
+1. Database dump contains the database name so it needs to be consistent between
+   the source and target.
