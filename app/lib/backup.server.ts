@@ -34,7 +34,7 @@ export const backup = async () => {
 
   const zip = new AdmZip()
 
-  zip.addLocalFile(path.join(BACKUPS_DIR, 'db.sql'))
+  zip.addLocalFile(path.join(BACKUPS_DIR, 'db.dump'))
   await asyncForEach(
     [
       {filePath: ASSETS_PATH, zipPath: 'assets'},
