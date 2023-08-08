@@ -15,7 +15,7 @@ export const loader = async ({request}: LoaderArgs) => {
     getUserFromUPN(getUPNFromHeaders(request))
   )
 
-  if(user.type !== 'STAFF'){
+  if (user.type !== 'STAFF') {
     throw new Response('Access Denied', {status: 403})
   }
 
@@ -142,7 +142,7 @@ const ComponentGroup = ({
   defaultExpanded
 }: {
   name: string
-  components: Pick<Component, "id" | "name" | "state">[]
+  components: Pick<Component, 'id' | 'name' | 'state'>[]
   defaultExpanded: boolean
 }) => {
   const [expanded, setExpanded] = useState(defaultExpanded)
@@ -160,7 +160,7 @@ const ComponentGroup = ({
   const groupStatus = COMPONENT_STATUS[state]
 
   return (
-    <div className="bg-white rounded-xl shadow-xl p-2">
+    <div className="bg-white rounded-xl shadow-xl p-2 mb-8">
       <div className="text-2xl">
         {groupStatus.icon} {name}
         <span
