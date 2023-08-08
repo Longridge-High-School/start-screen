@@ -56,7 +56,7 @@ export const backup = async () => {
   )
 
   await zip.writeZipPromise(path.join(BACKUPS_DIR, 'backup.zip'))
-  await unlink(path.join(BACKUPS_DIR, 'db.sql'))
+  await unlink(path.join(BACKUPS_DIR, 'db.dump'))
 }
 
 export const restore = async (filePath: string) => {
@@ -107,7 +107,7 @@ export const restore = async (filePath: string) => {
       `pg_restore -C -U ${username} -d ${db} -h ${host} -p ${port} < "${path.join(
         BACKUPS_DIR,
         'restore',
-        'db.sql'
+        'db.dump'
       )}"`,
       {env: {PGPASSWORD: password, NODE_ENV: process.env.NODE_ENV}},
       (error, stdout) => {
