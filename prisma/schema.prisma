@@ -140,3 +140,47 @@ model InfoMessage {
   type      InfoMessageType
   scopes    String[]
 }
+
+model ComponentGroup {
+  id              Int         @id @default(autoincrement())
+  name            String
+  order           Int
+  components      Component[]
+  defaultExpanded Boolean
+}
+
+enum ComponentState {
+  Operational
+  PerformanceIssues
+  PartialOutage
+  MajorOutage
+  Unkown
+}
+
+model Component {
+  id               Int            @id @default(autoincrement())
+  name             String
+  state            ComponentState
+  description      String
+  descriptionCache String
+  group            ComponentGroup @relation(fields: [groupId], references: [id])
+  groupId          Int
+  incidents        Incident[]
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @default(now()) @updatedAt
+}
+
+model Incident {
+  id          Int            @id @default(autoincrement())
+  title       String
+  message     String
+  parent      Incident?      @relation(fields: [parentId], references: [id], name: "parent", onDelete: Cascade)
+  parentId    Int?
+  children    Incident[]     @relation("parent")
+  state       ComponentState
+  component   Component      @relation(fields: [componentId], references: [id])
+  componentId Int
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @default(now()) @updatedAt
+  open        Boolean        @default(true)
+}
