@@ -48,7 +48,7 @@ export const action: ActionFunction = async ({request}) => {
   const prisma = getPrisma()
 
   const response = await unifi.createVouchers(
-    parseInt(duration) * 86400,
+    parseInt(duration) * 1440,
     parseInt(count),
     multiUse ? 0 : 1
   )
@@ -69,7 +69,7 @@ export const action: ActionFunction = async ({request}) => {
 
   await log(
     'Guest WiFi',
-    `Created ${count} ${parseInt(duration) * 86400} day ${
+    `Created ${count} ${parseInt(duration) * 1440} day ${
       multiUse ? 'Multi Use' : ''
     } vouchers`,
     user.username
