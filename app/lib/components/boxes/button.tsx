@@ -17,9 +17,17 @@ export const Button: FunctionComponent<{
   }
 
   const variants = {
-    initial: {scale: newTab ? 1 : 0.7, transition: {...spring, delay: 0}},
+    initial: {
+      opacity: 0.8,
+      scale: newTab ? 1 : 0.7,
+      transition: {...spring, delay: 0}
+    },
     active: () => {
-      return {scale: 1, transition: {...spring, delay: !open ? delay : 0}}
+      return {
+        opacity: 1,
+        scale: 1,
+        transition: {...spring, delay: !open ? delay : 0}
+      }
     },
     hovering: {scale: 0.8, transition: {...spring, delay: 0}}
   }
