@@ -1,8 +1,14 @@
 import {Worker, Queue} from 'bullmq'
-import {subHours} from 'date-fns'
+import {subHours, format} from 'date-fns'
 import {PrismaClient} from '@prisma/client'
 import {createSession} from 'net-snmp'
 import cron from 'node-cron'
+import fs from 'fs'
+import path from 'path'
+import {mkdirp} from 'mkdirp'
+import AdmZip from 'adm-zip'
+import {exec} from 'node:child_process'
+import {asyncForEach} from '@arcath/utils/lib/functions/async-for-each.js'
 
 import {getRedis} from '../app/lib/redis.server.mjs'
 
@@ -16,6 +22,11 @@ const queue = new Queue('main', {connection})
 cron.schedule('0 0 0 * * *', async () => {
   // Clear old incidents at midnight
   await queue.add('clearIncidents', {})
+})
+
+cron.schedule('0 0 0 * * 7', async () => {
+  // Run backups every sunday
+  await queue.add('createBackup', {})
 })
 
 /**
@@ -113,11 +124,58 @@ createHandler('updatePrintLevels', async ({data}) => {
 // createBackup
 //
 //
-/*const {unlink, readdir, rename, rm} = fs.promises
+const {unlink, readdir, rename, rm} = fs.promises
 
 const BACKUPS_DIR = path.join(process.cwd(), 'public', 'backups')
 const ASSETS_PATH = path.join(process.cwd(), 'public', 'assets')
 const ADVERTS_PATH = path.join(process.cwd(), 'public', 'adverts')
 const ICONS_PATH = path.join(process.cwd(), 'public', 'icons')
 
-createHandler('createBackup', async () => {})*/
+createHandler('createBackup', async () => {
+  await mkdirp(BACKUPS_DIR)
+
+  const matches = RegExp(
+    /^postgresql:\/\/(?<username>.*?):(?<password>.*?)@(?<host>.*?):(?<port>[0-9]*?)\/(?<db>[a-z-_]*)/g
+  ).exec(process.env.DATABASE_URL)
+
+  const {username, password, host, port, db} = matches.groups
+
+  await new Promise((resolve, reject) => {
+    exec(
+      `pg_dump -Fc -U ${username} -d ${db} -h ${host} -p ${port} > "${BACKUPS_DIR}/db.dump"`,
+      {env: {PGPASSWORD: password, NODE_ENV: process.env.NODE_ENV}},
+      (error, stdout) => {
+        console.dir([error, stdout])
+        resolve(true)
+      }
+    )
+  })
+
+  const zip = new AdmZip()
+
+  zip.addLocalFile(path.join(BACKUPS_DIR, 'db.dump'))
+  await asyncForEach(
+    [
+      {filePath: ASSETS_PATH, zipPath: 'assets'},
+      {filePath: ADVERTS_PATH, zipPath: 'adverts'},
+      {filePath: ICONS_PATH, zipPath: 'icons'}
+    ],
+    ({filePath, zipPath}) => {
+      console.dir([filePath, zipPath])
+      return new Promise((resolve, reject) => {
+        zip.addLocalFolderAsync(
+          filePath,
+          (s, e) => {
+            resolve()
+          },
+          zipPath
+        )
+      })
+    }
+  )
+
+  const fileDate = format(new Date(), 'yyyy-MM-dd-HH-mm')
+
+  await zip.writeZipPromise(path.join(BACKUPS_DIR, `backup-${fileDate}.zip`))
+  await unlink(path.join(BACKUPS_DIR, 'db.dump'))
+})

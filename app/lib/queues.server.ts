@@ -20,5 +20,5 @@ export const addJob = <JobName extends keyof Jobs>(
   jobName: JobName,
   jobDetails: Jobs[JobName]
 ) => {
-  return jobsQueue.add(jobName, jobDetails)
+  return jobsQueue.add(jobName, jobDetails, {removeOnComplete: 20})
 }

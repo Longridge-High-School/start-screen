@@ -1,12 +1,12 @@
 import {type LoaderArgs, json, type ActionArgs} from '@remix-run/node'
-import {Form, useActionData} from '@remix-run/react'
+import {Form, useActionData, useLoaderData} from '@remix-run/react'
 import {useState} from 'react'
+import fs from 'fs'
+import path from 'path'
 
 import {getUPNFromHeaders, getUserFromUPN} from '~/lib/user.server'
 
-import {getPrisma} from '~/lib/prisma'
-
-import {backup} from '~/lib/backup.server'
+import {addJob} from '~/lib/queues.server'
 
 import {buttonClasses, labelClasses, labelSpanClasses} from '~/lib/classes'
 
@@ -17,13 +17,10 @@ export const loader = async ({request}: LoaderArgs) => {
     throw new Response('Access Denied', {status: 403})
   }
 
-  const prisma = getPrisma()
+  const backupsDir = path.join(process.cwd(), 'public', 'backups')
+  const files = await fs.promises.readdir(backupsDir)
 
-  const usersCount = await prisma.user.count()
-  const doodlesCount = await prisma.doodle.count()
-  const advertsCount = await prisma.advert.count()
-
-  return json({usersCount, doodlesCount, advertsCount})
+  return json({files})
 }
 
 export const action = async ({request}: ActionArgs) => {
@@ -33,7 +30,7 @@ export const action = async ({request}: ActionArgs) => {
     throw new Response('Access Denied', {status: 403})
   }
 
-  await backup()
+  await addJob('createBackup', {})
 
   return json({result: true})
 }
@@ -41,6 +38,7 @@ export const action = async ({request}: ActionArgs) => {
 const AdminBackup = () => {
   const [submitted, setSubmitted] = useState(false)
   const actionData = useActionData<typeof action>()
+  const {files} = useLoaderData<typeof loader>()
 
   return (
     <div className="grid grid-cols-2 gap-4 w-3/4 m-auto mt-4">
@@ -71,6 +69,16 @@ const AdminBackup = () => {
         ) : (
           ''
         )}
+        <h2>Backups:</h2>
+        <ul>
+          {files.map((file, i) => {
+            return (
+              <li key={i}>
+                <a href={`/backups/${file}`}>{file}</a>
+              </li>
+            )
+          })}
+        </ul>
       </div>
       <div className="bg-white rounded-xl shadow p-2">
         <h2 className="text-3xl mb-2">Restore</h2>

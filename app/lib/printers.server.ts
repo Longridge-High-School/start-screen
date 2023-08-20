@@ -1,6 +1,4 @@
-import {createSession} from 'net-snmp'
-import {SECOND_IN_MS, asyncForEach, asyncMap, isDev} from '@arcath/utils'
-import {isAfter, subMinutes} from 'date-fns'
+import {SECOND_IN_MS, asyncForEach} from '@arcath/utils'
 
 import {getPrisma} from './prisma'
 import {getRedis} from './redis.server.mjs'
@@ -92,64 +90,4 @@ export const getSupplyLevels = async () => {
   })
 
   return data
-
-  /*
-  if (!isDev && isAfter(Cache.time, subMinutes(new Date(), 5))) {
-    return Cache.data
-  }
-
-  const prisma = getPrisma()
-
-  const printers = await prisma.printer.findMany({orderBy: {name: 'asc'}})
-
-  const data = await asyncMap(
-    printers,
-    ({
-      name,
-      ip,
-      snmpCommunity,
-      staffOnly,
-      blackOID,
-      cyanOID,
-      magentaOID,
-      yellowOID
-    }) => {
-      return new Promise<PrinterData>(resolve => {
-        const session = createSession(ip, snmpCommunity)
-
-        session.get(
-          [blackOID, cyanOID, magentaOID, yellowOID],
-          (err, varBinds) => {
-            if (err) {
-              resolve({
-                name,
-                staffOnly,
-                black: 0,
-                cyan: 0,
-                magenta: 0,
-                yellow: 0
-              })
-
-              return
-            }
-
-            resolve({
-              name,
-              staffOnly,
-              black: varBinds[0].value,
-              cyan: varBinds[1].value,
-              magenta: varBinds[2].value,
-              yellow: varBinds[3].value
-            })
-          }
-        )
-      })
-    }
-  )
-
-  Cache.data = data
-  Cache.time = new Date()
-
-  return data
-  */
 }

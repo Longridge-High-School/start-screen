@@ -13,7 +13,9 @@
     "dev:docker:stop": "docker stop start-screen-dev && docker rm start-screen-dev",
     "remix:dev": "remix dev",
     "postinstall": "remix setup node",
-    "start": "cross-env NODE_ENV=production remix-serve build",
+    "start": "concurrently \"npm:start:app\" \"npm:start:worker\"",
+    "start:app": "cross-env NODE_ENV=production remix-serve build",
+    "start:worker": "cross-env NODE_ENV=production node ./worker/worker.mjs",
     "docker": "prisma migrate deploy && prisma generate && npm run start",
     "lint": "eslint --ext js,jsx,ts,tsx .",
     "typecheck": "tsc --skipLibCheck"
@@ -28,6 +30,7 @@
     "adm-zip": "^0.5.10",
     "bullmq": "^4.7.3",
     "color-string": "^1.9.1",
+    "concurrently": "^8.2.0",
     "cross-env": "^7.0.3",
     "date-fns": "^2.30.0",
     "framer-motion": "^10.15.2",
