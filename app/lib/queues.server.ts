@@ -12,6 +12,7 @@ export type Jobs = {
     oid: string
   }
   createBackup: {}
+  restoreBackup: {filePath: string}
 }
 
 export type JobName = keyof Jobs
