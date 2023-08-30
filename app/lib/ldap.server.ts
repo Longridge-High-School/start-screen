@@ -65,8 +65,6 @@ export const createChange = (change: ldap.Change) => {
 export const createAttribute = (type: string, values: any) => {
   return new ldap.Attribute({
     type,
-    // @types/ldapjs expects `vals` vs the new correct property of `values`
-    // @ts-expect-error
     values
   })
 }

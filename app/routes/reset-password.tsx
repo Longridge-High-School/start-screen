@@ -58,8 +58,6 @@ const resetPassword = async (username: string) => {
                   operation: 'replace',
                   modification: new ldap.Attribute({
                     type: 'unicodePwd',
-                    // @types/ldapjs expects `vals` vs the new correct property of `values`
-                    // @ts-expect-error
                     values: encodePassword(`${username.slice(0, 5)}1`)
                   })
                 }),
@@ -67,8 +65,6 @@ const resetPassword = async (username: string) => {
                   operation: 'replace',
                   modification: new ldap.Attribute({
                     type: 'pwdLastSet',
-                    // @types/ldapjs expects `vals` vs the new correct property of `values`
-                    // @ts-expect-error
                     values: '0000'
                   })
                 })
