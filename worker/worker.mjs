@@ -125,7 +125,7 @@ createHandler('updatePrintLevels', async ({data}) => {
   session.get([data.oid], (err, varBinds) => {
     const redis = getRedis()
 
-    const value = err ? 0 : varBinds[0]
+    const value = err ? 0 : varBinds[0].value
 
     redis.set(`printer:${data.printer}:${data.consumable}`, value, () => {
       log(
