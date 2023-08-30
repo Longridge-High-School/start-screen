@@ -39,7 +39,7 @@ export const getSupplyLevels = async () => {
   const printers = await prisma.printer.findMany({orderBy: {name: 'asc'}})
 
   if (
-    lastUpdate !== null &&
+    lastUpdate === null ||
     parseInt(lastUpdate) < Date.now() - SECOND_IN_MS * 600
   ) {
     asyncForEach(
