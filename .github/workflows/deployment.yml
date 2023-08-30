@@ -48,6 +48,7 @@ jobs:
               - 'prisma/**'
               - 'public/**'
               - '.github/workflows/**'
+              - 'worker/**'
             docs:
               - 'docs/**'
               - '.github/workflows/**'
