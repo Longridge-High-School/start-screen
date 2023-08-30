@@ -6,6 +6,7 @@ const jobsQueue = new Queue('main', {connection: getRedis()})
 
 export type Jobs = {
   clearIncidents: {}
+  clearMessages: {}
   updatePrintLevels: {
     printer: number
     consumable: 'black' | 'magenta' | 'cyan' | 'yellow'

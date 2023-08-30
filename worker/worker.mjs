@@ -1,5 +1,5 @@
 import {Worker, Queue} from 'bullmq'
-import {subHours, format} from 'date-fns'
+import {subHours, format, subDays} from 'date-fns'
 import {PrismaClient} from '@prisma/client'
 import {createSession} from 'net-snmp'
 import cron from 'node-cron'
@@ -22,6 +22,7 @@ const queue = new Queue('main', {connection})
 cron.schedule('0 0 0 * * *', async () => {
   // Clear old incidents at midnight
   await queue.add('clearIncidents', {})
+  await queue.add('clearMessages', {})
 })
 
 cron.schedule('0 0 0 * * 7', async () => {
@@ -85,6 +86,25 @@ createHandler('clearIncidents', async () => {
     await log(
       'Incidents',
       `Cleared old incidents (${count})`,
+      'Background Worker'
+    )
+  }
+})
+
+//
+//
+// clearMessages
+//
+//
+createHandler('clearMessages', async () => {
+  const {count} = await prisma.infoMessage.deleteMany({
+    where: {endDate: {lte: subDays(new Date(), 30)}}
+  })
+
+  if (count > 0) {
+    await log(
+      'Messages',
+      `Cleared old messages (${count})`,
       'Background Worker'
     )
   }
