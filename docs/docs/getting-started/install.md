@@ -22,6 +22,13 @@ services:
       - /path/to/db:/var/lib/postgresql/data
     ports:
       - '5432:5432'
+  redis:
+    image: redis:7
+    restart: always
+    volumes:
+      - /path/to/redis/data:/data
+    ports:
+      - 6379:6379
   remix:
     image: longridgehighschool/start-screen:latest
     restart: always
@@ -29,12 +36,14 @@ services:
       - '3000:3000'
     environment:
       - DATABASE_URL=postgresql://postgres:YOUR_PASSWORD@db:5432/connect?connection_limit=30&pool_timeout=0
+      - REDIS_URL=redis://redis:6379
     volumes:
       - /path/to/icons:/app/public/icons
       - /path/to/adverts:/app/public/adverts
       - /path/to/assets:/app/public/assets
     depends_on:
       - db
+      - redis
 ```
 
 > The docker tag `latest` will always be the latest

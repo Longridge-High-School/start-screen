@@ -10,7 +10,7 @@ import {invariant} from '@arcath/utils'
 
 import {getUPNFromHeaders, getUserFromUPN} from '~/lib/user.server'
 
-import {restore} from '~/lib/backup.server'
+import {addJob} from '~/lib/queues.server'
 
 export const action = async ({request}: ActionArgs) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
@@ -36,7 +36,7 @@ export const action = async ({request}: ActionArgs) => {
 
   invariant(fileData)
 
-  await restore(fileData.filepath)
+  await addJob('restoreBackup', {filePath: fileData.filepath})
 
   return redirect('/admin')
 }
