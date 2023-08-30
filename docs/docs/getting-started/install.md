@@ -22,6 +22,13 @@ services:
       - /path/to/db:/var/lib/postgresql/data
     ports:
       - '5432:5432'
+  redis:
+    image: redis:7
+    restart: always
+    volumes:
+      - /path/to/redis/data:/data
+    ports:
+      - 6379:6379
   remix:
     image: longridgehighschool/start-screen:latest
     restart: always
@@ -35,6 +42,7 @@ services:
       - /path/to/assets:/app/public/assets
     depends_on:
       - db
+      - redis
 ```
 
 > The docker tag `latest` will always be the latest
