@@ -1,9 +1,11 @@
 import {type LoaderArgs, json} from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
 import {useMemo} from 'react'
+import {subDays} from 'date-fns'
 
 import {getPrisma} from '~/lib/prisma'
 import {getUPNFromHeaders, getUserFromUPN} from '~/lib/user.server'
+import {getConfigValue} from '~/lib/config.server'
 
 import {getMDXComponent} from '~/lib/mdx'
 
@@ -12,9 +14,11 @@ export const loader = async ({request}: LoaderArgs) => {
 
   const prisma = getPrisma()
 
+  const maxDays = await getConfigValue('maximumDoodleAge')
+
   const doodles = await prisma.doodle.findMany({
     where: {
-      startDate: {lte: new Date(), gt: new Date(2020, 1, 1)},
+      startDate: {lte: new Date(), gt: subDays(new Date(), parseInt(maxDays))},
       bodyCache: {not: ''}
     },
     orderBy: {startDate: 'desc'}

@@ -124,6 +124,11 @@ export const ConfigDefaults = {
   aupGroup: {
     value: '',
     description: 'The group to remove users from after they sign.'
+  },
+  maximumDoodleAge: {
+    value: '365',
+    description:
+      'The maximum age of doodles to display on the doodles page (in days)'
   }
 } as const
 

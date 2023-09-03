@@ -122,7 +122,7 @@ const AcceptableUsePolicy = () => {
           onChange={e => {
             setSignature(e.target.value)
           }}
-          placeholder="Enter your full name as listed below."
+          placeholder="Enter your full name as displayed below."
         />
         <form method="POST">
           <button
