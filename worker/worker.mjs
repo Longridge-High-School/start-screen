@@ -128,12 +128,6 @@ createHandler('updatePrintLevels', async ({data}) => {
     const value = err ? 0 : varBinds[0].value
 
     redis.set(`printer:${data.printer}:${data.consumable}`, value, () => {
-      log(
-        'Printers',
-        `Updated ${data.consumable} for printer #${data.printer}`,
-        'Background Worker'
-      )
-
       redis.set(`printer:last`, Date.now())
     })
   })
