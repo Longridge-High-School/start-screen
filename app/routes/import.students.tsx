@@ -78,5 +78,15 @@ export const action: ActionFunction = async ({request}) => {
     }
   )
 
+  const usernames = students.reduce((names, {username}) => {
+    return [...names, username]
+  }, [] as string[])
+
+  const deletable = await prisma.user.findMany({
+    where: {type: 'STUDENT', manual: false, username: {notIn: usernames}}
+  })
+
+  await log('Imports', `Would delete ${deletable.length} users`)
+
   return json({message: 'Success'}, 200)
 }
