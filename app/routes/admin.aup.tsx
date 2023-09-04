@@ -142,7 +142,7 @@ const AdminAUP = () => {
       <div className="bg-blue-100 rounded w-full h-2 flex overflow-hidden my-4">
         <div
           className="bg-blue-400"
-          style={{width: `${(aupAcceptedCount / usersCount) * 100}`}}
+          style={{width: `${(aupAcceptedCount / usersCount) * 100}%`}}
         />
       </div>
       <div className="grid grid-cols-3">
