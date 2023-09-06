@@ -131,7 +131,7 @@ const AcceptableUsePolicy = () => {
               'disabled:bg-green-100 disabled:shadow-none',
               'w-full'
             ])}
-            disabled={signature !== user.name}
+            disabled={signature.toLowerCase() !== user.name.toLowerCase()}
           >
             Sign
           </button>
