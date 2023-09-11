@@ -82,11 +82,15 @@ export const action: ActionFunction = async ({request}) => {
     return [...names, username]
   }, [] as string[])
 
-  const deletable = await prisma.user.findMany({
+  const deletable = await prisma.user.count({
     where: {type: 'STUDENT', manual: false, username: {notIn: usernames}}
   })
 
-  await log('Imports', `Would delete ${deletable.length} users`)
+  await prisma.user.deleteMany({
+    where: {type: 'STUDENT', manual: false, username: {notIn: usernames}}
+  })
+
+  await log('Imports', `Deleted ${deletable} users`)
 
   return json({message: 'Success'}, 200)
 }
