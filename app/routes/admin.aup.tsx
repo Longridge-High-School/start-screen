@@ -88,6 +88,7 @@ export const action = async ({request}: ActionArgs) => {
   const reset = formData.get('reset') as string | undefined
   const group = formData.get('group') as string | undefined
   const username = formData.get('username') as string | undefined
+  const signUsername = formData.get('sign-username') as string | undefined
 
   invariant(body)
 
@@ -117,6 +118,15 @@ export const action = async ({request}: ActionArgs) => {
       prisma.user.updateMany({
         where: {username},
         data: {aupAccepted: false}
+      })
+    )
+  }
+
+  if (signUsername) {
+    await time('setUser', 'Set an users AUP signature', () =>
+      prisma.user.updateMany({
+        where: {username: signUsername},
+        data: {aupAccepted: true}
       })
     )
   }
@@ -221,6 +231,17 @@ const AdminAUP = () => {
             <input type="text" name="username" className={inputClasses()} />
             <span className={labelInfoClasses()}>
               If set the user will be required to resign the AUP.
+            </span>
+          </label>
+          <label className={labelClasses()}>
+            <span className={labelSpanClasses()}>Reset User</span>
+            <input
+              type="text"
+              name="sign-username"
+              className={inputClasses()}
+            />
+            <span className={labelInfoClasses()}>
+              If set the user have it set that they have signed the AUP.
             </span>
           </label>
         </fieldset>

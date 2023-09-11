@@ -22,6 +22,7 @@ import {getConfigValue} from '~/lib/config.server'
 import {createTimings, combineServerTimingHeaders} from '~/utils/timings.server'
 import {buttonClasses, inputClasses, labelSpanClasses} from '~/lib/classes'
 import {getPrisma} from '~/lib/prisma'
+import {log} from '~/log.server'
 
 export const loader = async ({request}: LoaderArgs) => {
   const {time, getHeader} = createTimings()
@@ -65,19 +66,19 @@ export const action = async ({request}: ActionArgs) => {
     const {dn} = await findUserDN(client, user.username, studentsOU)
 
     if (!dn) {
-      throw new Response('Error finding user', {status: 500})
-    }
-
-    const change = createChange({
-      operation: 'delete',
-      modification: createAttribute('member', dn)
-    })
-
-    await new Promise((resolve, reject) => {
-      client.modify(groupDN, [change], err => {
-        resolve(err)
+      await log('AUP', 'Could not find user in AD', user.username)
+    } else {
+      const change = createChange({
+        operation: 'delete',
+        modification: createAttribute('member', dn)
       })
-    })
+
+      await new Promise((resolve, reject) => {
+        client.modify(groupDN, [change], err => {
+          resolve(err)
+        })
+      })
+    }
 
     client.unbind()
   }
