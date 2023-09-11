@@ -123,7 +123,7 @@ jobs:
       'refs/tags/v') }}
     runs-on: ubuntu-latest
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}-ts
+      group: ${{ github.workflow }}-${{ github.ref }}-prettier
       cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
     steps:
       - name: ⬇️ Checkout repo
