@@ -105,7 +105,11 @@ const AdminsPage = () => {
                 </td>
                 <td>{username}</td>
                 <td>
-                  {currentUser.id !== id ? <a href={`?delete=${id}`}>🗑</a> : ''}
+                  {currentUser.id !== id ? (
+                    <a href={`?delete=${id}`}>🗑</a>
+                  ) : (
+                    ''
+                  )}
                 </td>
               </tr>
             )

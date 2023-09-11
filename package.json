@@ -18,7 +18,8 @@
     "start:worker": "cross-env NODE_ENV=production node ./worker/worker.mjs",
     "docker": "prisma migrate deploy && prisma generate && npm run start",
     "lint": "eslint --ext js,jsx,ts,tsx .",
-    "typecheck": "tsc --skipLibCheck"
+    "typecheck": "tsc --skipLibCheck",
+    "prettier": "prettier app --check --end-of-line auto"
   },
   "dependencies": {
     "@arcath/utils": "^3.14.1",
