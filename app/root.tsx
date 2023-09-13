@@ -75,7 +75,10 @@ export default function App() {
         <link rel="icon" href={logo} />
         <style>{css}</style>
       </head>
-      <body style={{backgroundImage: `url('${background}')`}}>
+      <body
+        style={{backgroundImage: `url('${background}')`}}
+        className="bg-fixed"
+      >
         <Outlet />
         <ScrollRestoration />
         {analyticsDomain !== '' ? (
