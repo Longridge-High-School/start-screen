@@ -56,14 +56,36 @@ export const loader = async ({request}: LoaderArgs) => {
     'Get AUP User Counts',
     async () => {
       return [
-        await prisma.user.count({where: {type: 'STUDENT'}}),
-        await prisma.user.count({where: {aupAccepted: true, type: 'STUDENT'}})
+        await prisma.user.count({where: {type: 'STUDENT', manual: false}}),
+        await prisma.user.count({
+          where: {aupAccepted: true, type: 'STUDENT', manual: false}
+        })
       ]
     }
   )
 
+  const usersToAccept = await time(
+    'getAupToAccept',
+    'Get Users that need to sign the AUP',
+    async () => {
+      return prisma.user.findMany({
+        select: {id: true, name: true, yearGroup: true},
+        where: {aupAccepted: false, type: 'STUDENT', manual: false},
+        orderBy: [{yearGroup: 'asc'}, {name: 'asc'}]
+      })
+    }
+  )
+
   return json(
-    {aup, user, usersCount, aupAcceptedCount, aupRequired, aupGroup},
+    {
+      aup,
+      user,
+      usersCount,
+      aupAcceptedCount,
+      aupRequired,
+      aupGroup,
+      usersToAccept
+    },
     {
       headers: {'Server-Timing': getHeader()}
     }
@@ -141,13 +163,19 @@ export const headers = ({loaderHeaders, actionHeaders}: HeadersArgs) => {
 }
 
 const AdminAUP = () => {
-  const {aup, usersCount, aupAcceptedCount, aupRequired, aupGroup} =
-    useLoaderData<typeof loader>()
+  const {
+    aup,
+    usersCount,
+    aupAcceptedCount,
+    aupRequired,
+    aupGroup,
+    usersToAccept
+  } = useLoaderData<typeof loader>()
 
   const [body, setBody] = useState(aup)
 
   return (
-    <div className="mt-4 shadow-xl bg-white w-1/2 m-auto rounded-xl p-2">
+    <div className="mt-4 shadow-xl bg-white w-1/2 m-auto rounded-xl p-2 mb-4">
       <h1 className="text-3xl">Acceptable Use Policy</h1>
       <div className="bg-blue-100 rounded w-full h-2 flex overflow-hidden my-4">
         <div
@@ -249,6 +277,25 @@ const AdminAUP = () => {
           <button className={buttonClasses()}>Update AUP</button>
         </div>
       </form>
+      <h2 className="mt-2 text-xl mb-4">Users still to Accept</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Year</th>
+          </tr>
+        </thead>
+        <tbody>
+          {usersToAccept.map(({id, name, yearGroup}) => {
+            return (
+              <tr key={id}>
+                <td>{name}</td>
+                <td>{yearGroup}</td>
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
     </div>
   )
 }
