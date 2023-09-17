@@ -1,4 +1,9 @@
-import {type LoaderArgs, type ActionArgs, json, redirect} from '@remix-run/node'
+import {
+  type LoaderFunctionArgs,
+  type ActionFunctionArgs,
+  json,
+  redirect
+} from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
 import {invariant} from '@arcath/utils'
 
@@ -6,7 +11,7 @@ import {getUPNFromHeaders} from '~/lib/user.server'
 import {getPrisma} from '~/lib/prisma'
 import {setConfigValue} from '~/lib/config.server'
 
-export const loader = async ({request}: LoaderArgs) => {
+export const loader = async ({request}: LoaderFunctionArgs) => {
   const prisma = getPrisma()
 
   const userCount = await prisma.user.count()
@@ -20,7 +25,7 @@ export const loader = async ({request}: LoaderArgs) => {
   return json({upn})
 }
 
-export const action = async ({request}: ActionArgs) => {
+export const action = async ({request}: ActionFunctionArgs) => {
   const prisma = getPrisma()
 
   const userCount = await prisma.user.count()

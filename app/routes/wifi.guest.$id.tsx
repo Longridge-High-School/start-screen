@@ -1,4 +1,4 @@
-import {type LoaderArgs, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, json} from '@remix-run/node'
 import qrcode from 'qrcode'
 
 import {useLoaderData} from '@remix-run/react'
@@ -16,7 +16,7 @@ const mecardFormat = (input: string): string => {
   return input
 }
 
-export const loader = async ({params}: LoaderArgs) => {
+export const loader = async ({params}: LoaderFunctionArgs) => {
   const prisma = getPrisma()
 
   const voucher = await prisma.wirelessVoucher.findFirstOrThrow({

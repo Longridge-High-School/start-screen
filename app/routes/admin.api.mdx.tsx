@@ -1,10 +1,10 @@
-import {type ActionArgs, json, type HeadersArgs} from '@remix-run/node'
+import {type ActionFunctionArgs, json, type HeadersArgs} from '@remix-run/node'
 
 import {compileMDX} from '~/lib/mdx.server'
 import {createTimings} from '~/utils/timings.server'
 import {getUPNFromHeaders, getUserFromUPN} from '~/lib/user.server'
 
-export const action = async ({request}: ActionArgs) => {
+export const action = async ({request}: ActionFunctionArgs) => {
   const {time, getHeader} = createTimings()
 
   const user = await time('getUser', 'Get User from header', () =>

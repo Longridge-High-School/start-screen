@@ -1,4 +1,8 @@
-import {type LoaderArgs, json, type ActionArgs} from '@remix-run/node'
+import {
+  type LoaderFunctionArgs,
+  json,
+  type ActionFunctionArgs
+} from '@remix-run/node'
 import {useLoaderData, useActionData} from '@remix-run/react'
 import {invariant} from '@arcath/utils'
 
@@ -14,7 +18,7 @@ import {
   labelSpanClasses
 } from '~/lib/classes'
 
-export const loader = async ({request}: LoaderArgs) => {
+export const loader = async ({request}: LoaderFunctionArgs) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
 
   if (!user || !user.admin) {
@@ -30,7 +34,7 @@ export const loader = async ({request}: LoaderArgs) => {
   return json({usersCount, doodlesCount, advertsCount})
 }
 
-export const action = async ({request}: ActionArgs) => {
+export const action = async ({request}: ActionFunctionArgs) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
 
   if (!user || !user.admin) {

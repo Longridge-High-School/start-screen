@@ -1,11 +1,15 @@
-import {type LoaderArgs, type HeadersArgs, redirect} from '@remix-run/node'
+import {
+  type LoaderFunctionArgs,
+  type HeadersArgs,
+  redirect
+} from '@remix-run/node'
 
 import {getUPNFromHeaders, getUserFromUPN} from '~/lib/user.server'
 import {getPrisma} from '~/lib/prisma'
 import {log} from '~/log.server'
 import {createTimings} from '~/utils/timings.server'
 
-export const loader = async ({request, params}: LoaderArgs) => {
+export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const {time, getHeader} = createTimings()
 
   const user = await time('getUser', 'Get User from header', () =>

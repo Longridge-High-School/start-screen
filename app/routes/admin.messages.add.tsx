@@ -1,6 +1,6 @@
 import {
-  type ActionArgs,
-  type LoaderArgs,
+  type ActionFunctionArgs,
+  type LoaderFunctionArgs,
   json,
   redirect,
   type HeadersArgs
@@ -20,7 +20,7 @@ import {
   buttonClasses
 } from '~/lib/classes'
 
-export const loader = async ({request}: LoaderArgs) => {
+export const loader = async ({request}: LoaderFunctionArgs) => {
   const {time, getHeader} = createTimings()
 
   const user = await time('getUser', 'Get User from header', () =>
@@ -34,7 +34,7 @@ export const loader = async ({request}: LoaderArgs) => {
   return json({user}, {headers: {'Server-Timing': getHeader()}})
 }
 
-export const action = async ({request}: ActionArgs) => {
+export const action = async ({request}: ActionFunctionArgs) => {
   const {time, getHeader} = createTimings()
 
   const user = await time('getUser', 'Get User from header', () =>

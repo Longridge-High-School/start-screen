@@ -1,4 +1,8 @@
-import {type ActionArgs, json, type LoaderArgs} from '@remix-run/node'
+import {
+  type ActionFunctionArgs,
+  json,
+  type LoaderFunctionArgs
+} from '@remix-run/node'
 import {useActionData} from '@remix-run/react'
 import * as ldap from 'ldapjs'
 import {invariant} from '@arcath/utils'
@@ -97,7 +101,7 @@ const resetPassword = async (username: string) => {
   })
 }
 
-export const loader = async ({request}: LoaderArgs) => {
+export const loader = async ({request}: LoaderFunctionArgs) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
 
   if (!user || user.type !== 'STAFF') {
@@ -115,7 +119,7 @@ export const loader = async ({request}: LoaderArgs) => {
   return json({user})
 }
 
-export const action = async ({request}: ActionArgs) => {
+export const action = async ({request}: ActionFunctionArgs) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
 
   if (!user || user.type !== 'STAFF') {

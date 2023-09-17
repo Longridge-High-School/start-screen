@@ -1,7 +1,7 @@
 import {
-  type LoaderArgs,
+  type LoaderFunctionArgs,
   type HeadersArgs,
-  type ActionArgs,
+  type ActionFunctionArgs,
   json,
   redirect
 } from '@remix-run/node'
@@ -24,7 +24,7 @@ import {buttonClasses, inputClasses, labelSpanClasses} from '~/lib/classes'
 import {getPrisma} from '~/lib/prisma'
 import {log} from '~/log.server'
 
-export const loader = async ({request}: LoaderArgs) => {
+export const loader = async ({request}: LoaderFunctionArgs) => {
   const {time, getHeader} = createTimings()
   const user = await time('getUser', 'Get User from header', () =>
     getUserFromUPN(getUPNFromHeaders(request))
@@ -40,7 +40,7 @@ export const loader = async ({request}: LoaderArgs) => {
   )
 }
 
-export const action = async ({request}: ActionArgs) => {
+export const action = async ({request}: ActionFunctionArgs) => {
   const {time, getHeader} = createTimings()
   const user = await time('getUser', 'Get User from header', () =>
     getUserFromUPN(getUPNFromHeaders(request))

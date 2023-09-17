@@ -1,11 +1,11 @@
 import {Outlet, useLoaderData} from '@remix-run/react'
-import {type LoaderArgs, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, json} from '@remix-run/node'
 import {format, isAfter} from 'date-fns'
 
 import {getUserFromUPN, getUPNFromHeaders} from '~/lib/user.server'
 import {getPrisma} from '~/lib/prisma'
 
-export const loader = async ({request}: LoaderArgs) => {
+export const loader = async ({request}: LoaderFunctionArgs) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
 
   if (!user || user.type !== 'STAFF') {

@@ -1,11 +1,11 @@
 import {
-  type LoaderArgs,
+  type LoaderFunctionArgs,
   json,
   unstable_parseMultipartFormData,
   unstable_composeUploadHandlers,
   unstable_createFileUploadHandler,
   unstable_createMemoryUploadHandler,
-  type ActionArgs,
+  type ActionFunctionArgs,
   redirect
 } from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
@@ -28,7 +28,7 @@ const {readdir, unlink} = fs.promises
 
 const assetsDir = path.join(process.cwd(), 'public', 'assets')
 
-export const loader = async ({request}: LoaderArgs) => {
+export const loader = async ({request}: LoaderFunctionArgs) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
 
   if (!user || user.type !== 'STAFF') {
@@ -51,7 +51,7 @@ export const loader = async ({request}: LoaderArgs) => {
   return json({user, files})
 }
 
-export const action = async ({request}: ActionArgs) => {
+export const action = async ({request}: ActionFunctionArgs) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
 
   if (!user || user.type !== 'STAFF') {

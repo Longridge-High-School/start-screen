@@ -1,9 +1,9 @@
-import {type LoaderArgs, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, json} from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
 
 import {getPrisma} from '~/lib/prisma'
 
-export const loader = async ({params}: LoaderArgs) => {
+export const loader = async ({params}: LoaderFunctionArgs) => {
   const prisma = getPrisma()
 
   const advert = await prisma.advert.findFirstOrThrow({
@@ -14,7 +14,7 @@ export const loader = async ({params}: LoaderArgs) => {
 }
 
 const AdvertPage = () => {
-  const {advert} = useLoaderData()
+  const {advert} = useLoaderData<typeof loader>()
 
   return (
     <div className="text-center p-8 w-full">

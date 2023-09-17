@@ -1,6 +1,6 @@
 import {
-  type LoaderArgs,
-  type ActionArgs,
+  type LoaderFunctionArgs,
+  type ActionFunctionArgs,
   json,
   redirect,
   type HeadersArgs
@@ -24,7 +24,7 @@ import {
   labelInfoClasses
 } from '~/lib/classes'
 
-export const loader = async ({request}: LoaderArgs) => {
+export const loader = async ({request}: LoaderFunctionArgs) => {
   const {time, getHeader} = createTimings()
 
   const user = await time('getUser', 'Get User from header', () =>
@@ -49,7 +49,7 @@ export const loader = async ({request}: LoaderArgs) => {
   )
 }
 
-export const action = async ({request}: ActionArgs) => {
+export const action = async ({request}: ActionFunctionArgs) => {
   const {time, getHeader} = createTimings()
 
   const user = await time('getUser', 'Get User from header', () =>

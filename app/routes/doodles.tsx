@@ -1,4 +1,4 @@
-import {type LoaderArgs, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, json} from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
 import {useMemo} from 'react'
 import {subDays} from 'date-fns'
@@ -9,7 +9,7 @@ import {getConfigValue} from '~/lib/config.server'
 
 import {getMDXComponent} from '~/lib/mdx'
 
-export const loader = async ({request}: LoaderArgs) => {
+export const loader = async ({request}: LoaderFunctionArgs) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
 
   const prisma = getPrisma()

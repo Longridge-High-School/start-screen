@@ -2,7 +2,7 @@ import {
   json,
   redirect,
   type LoaderFunction,
-  type ActionArgs
+  type ActionFunctionArgs
 } from '@remix-run/node'
 import {useLoaderData, useRouteLoaderData} from '@remix-run/react'
 import type {User} from '@prisma/client'
@@ -46,7 +46,7 @@ export const loader: LoaderFunction = async ({request}) => {
   return json({admins})
 }
 
-export const action = async ({request}: ActionArgs) => {
+export const action = async ({request}: ActionFunctionArgs) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
 
   if (!user || !user.admin) {

@@ -1,4 +1,9 @@
-import {type LoaderArgs, json, type ActionArgs, redirect} from '@remix-run/node'
+import {
+  type LoaderFunctionArgs,
+  json,
+  type ActionFunctionArgs,
+  redirect
+} from '@remix-run/node'
 import {Outlet, useLoaderData} from '@remix-run/react'
 import {invariant} from '@arcath/utils'
 
@@ -18,7 +23,7 @@ import {
 } from '~/lib/classes'
 import {COMPONENT_STATUS} from '~/utils/constants'
 
-export const loader = async ({request, params}: LoaderArgs) => {
+export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const {time, getHeader} = createTimings()
 
   const user = await time('getUser', 'Get User from header', () =>
@@ -49,7 +54,7 @@ export const loader = async ({request, params}: LoaderArgs) => {
   )
 }
 
-export const action = async ({request, params}: ActionArgs) => {
+export const action = async ({request, params}: ActionFunctionArgs) => {
   const {time, getHeader} = createTimings()
 
   const user = await time('getUser', 'Get User from header', () =>

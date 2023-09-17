@@ -1,6 +1,6 @@
 import {
-  type LoaderArgs,
-  type ActionArgs,
+  type LoaderFunctionArgs,
+  type ActionFunctionArgs,
   json,
   redirect,
   unstable_parseMultipartFormData,
@@ -26,7 +26,7 @@ import {
   labelSpanClasses
 } from '~/lib/classes'
 
-export const loader = async ({request}: LoaderArgs) => {
+export const loader = async ({request}: LoaderFunctionArgs) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
 
   if (!user || !user.admin) {
@@ -42,7 +42,7 @@ export const loader = async ({request}: LoaderArgs) => {
   return json({user, brandDark, brandLight, logo, background, headerStrip})
 }
 
-export const action = async ({request}: ActionArgs) => {
+export const action = async ({request}: ActionFunctionArgs) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
 
   if (!user || !user.admin) {

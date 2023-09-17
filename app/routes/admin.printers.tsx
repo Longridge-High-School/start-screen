@@ -1,10 +1,10 @@
-import {type LoaderArgs, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, json} from '@remix-run/node'
 import {Outlet, useLoaderData} from '@remix-run/react'
 
 import {getUPNFromHeaders, getUserFromUPN} from '~/lib/user.server'
 import {getPrisma} from '~/lib/prisma'
 
-export const loader = async ({request}: LoaderArgs) => {
+export const loader = async ({request}: LoaderFunctionArgs) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
 
   if (!user || !user.admin) {
