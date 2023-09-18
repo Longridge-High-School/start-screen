@@ -1,4 +1,4 @@
-import {type LoaderArgs, json, type HeadersArgs} from '@remix-run/node'
+import {type LoaderFunctionArgs, json, type HeadersArgs} from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
 import {type ComponentState, type Component} from '@prisma/client'
 import {useState} from 'react'
@@ -9,7 +9,7 @@ import {getUPNFromHeaders, getUserFromUPN} from '~/lib/user.server'
 import {getPrisma} from '~/lib/prisma'
 import {COMPONENT_STATUS} from '~/utils/constants'
 
-export const loader = async ({request}: LoaderArgs) => {
+export const loader = async ({request}: LoaderFunctionArgs) => {
   const {time, getHeader} = createTimings()
   const user = await time('getUser', 'Get User from header', () =>
     getUserFromUPN(getUPNFromHeaders(request))

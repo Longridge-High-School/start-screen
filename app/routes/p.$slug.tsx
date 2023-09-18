@@ -1,4 +1,4 @@
-import {type LoaderArgs, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, json} from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
 import {useMemo} from 'react'
 
@@ -7,7 +7,7 @@ import {getPrisma} from '~/lib/prisma'
 
 import {getMDXComponent} from '~/lib/mdx'
 
-export const loader = async ({request, params}: LoaderArgs) => {
+export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
 
   const prisma = getPrisma()

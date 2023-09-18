@@ -9,7 +9,11 @@ import {
   isRouteErrorResponse,
   useLoaderData
 } from '@remix-run/react'
-import type {V2_MetaFunction, LinksFunction, LoaderArgs} from '@remix-run/node'
+import type {
+  MetaFunction,
+  LinksFunction,
+  LoaderFunctionArgs
+} from '@remix-run/node'
 import {json} from '@remix-run/node'
 import {pick} from '@arcath/utils'
 import colorString from 'color-string'
@@ -19,7 +23,7 @@ import {getUPNFromHeaders, getUserFromUPN} from '~/lib/user.server'
 
 import styles from './styles/app.css'
 
-export const loader = async ({request}: LoaderArgs) => {
+export const loader = async ({request}: LoaderFunctionArgs) => {
   const tabTitle = await getConfigValue('tabTitle')
 
   const user = await getUserFromUPN(getUPNFromHeaders(request))
@@ -45,8 +49,8 @@ export type RootLoaderData = Awaited<
   ReturnType<Awaited<ReturnType<typeof loader>>['json']>
 >
 
-export const meta: V2_MetaFunction = ({data}) => {
-  return [{title: data.tabTitle}]
+export const meta: MetaFunction<typeof loader> = ({data}) => {
+  return [{title: data?.tabTitle}]
 }
 
 export const links: LinksFunction = () => {

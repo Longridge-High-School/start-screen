@@ -1,11 +1,11 @@
-import {type ActionArgs, json} from '@remix-run/node'
+import {type ActionFunctionArgs, json} from '@remix-run/node'
 import {asyncForEach, indexedBy, keys} from '@arcath/utils'
 
 import {getPrisma} from '~/lib/prisma'
 import {getConfigValue} from '~/lib/config.server'
 import {log} from '~/log.server'
 
-export const action = async ({request}: ActionArgs) => {
+export const action = async ({request}: ActionFunctionArgs) => {
   const token = request.headers.get('Import-Token')
   const importKey = await getConfigValue('importKey')
 

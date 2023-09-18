@@ -1,4 +1,4 @@
-import {json, type LoaderArgs, type HeadersArgs} from '@remix-run/node'
+import {json, type LoaderFunctionArgs, type HeadersArgs} from '@remix-run/node'
 import {Outlet, useLoaderData} from '@remix-run/react'
 import {format} from 'date-fns'
 
@@ -8,7 +8,7 @@ import {buttonClasses} from '~/lib/classes'
 
 import {getPrisma} from '~/lib/prisma'
 
-export const loader = async ({request}: LoaderArgs) => {
+export const loader = async ({request}: LoaderFunctionArgs) => {
   const {time, getHeader} = createTimings()
 
   const user = await time('getUser', 'Get User from header', () =>

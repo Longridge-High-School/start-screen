@@ -1,6 +1,6 @@
 import {
-  type LoaderArgs,
-  type ActionArgs,
+  type LoaderFunctionArgs,
+  type ActionFunctionArgs,
   json,
   redirect,
   type LinksFunction
@@ -29,7 +29,7 @@ export const links: LinksFunction = () => {
   return [{rel: 'stylesheet', href: styles}]
 }
 
-export const loader = async ({request, params}: LoaderArgs) => {
+export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
 
   if (!user || !user.admin) {
@@ -45,7 +45,7 @@ export const loader = async ({request, params}: LoaderArgs) => {
   return json({page, user})
 }
 
-export const action = async ({request, params}: ActionArgs) => {
+export const action = async ({request, params}: ActionFunctionArgs) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
 
   if (!user || user.type !== 'STAFF') {

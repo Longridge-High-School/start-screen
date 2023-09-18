@@ -13,6 +13,20 @@ module.exports = {
   // publicPath: "/build/",
   // devServerPort: 8002
   tailwind: true,
+  browserNodeBuiltinsPolyfill: {
+    modules: {
+      path: true,
+      fs: true,
+      url: true,
+      querystring: true,
+      tls: true,
+      net: true,
+      events: true,
+      stream: true,
+      assert: true,
+      util: true
+    }
+  },
   serverDependenciesToBundle: [
     /@arcath\/utils.*/,
     /mdx-bundler.*/,
@@ -45,12 +59,5 @@ module.exports = {
     'decode-named-character-reference'
   ],
   serverModuleFormat: 'cjs',
-  future: {
-    v2_routeConvention: true,
-    v2_meta: true,
-    v2_errorBoundary: true,
-    v2_normalizeFormMethod: true,
-    v2_headers: true,
-    v2_dev: true
-  }
+  future: {}
 }

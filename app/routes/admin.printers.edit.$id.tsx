@@ -1,4 +1,9 @@
-import {type ActionArgs, type LoaderArgs, json, redirect} from '@remix-run/node'
+import {
+  type ActionFunctionArgs,
+  type LoaderFunctionArgs,
+  json,
+  redirect
+} from '@remix-run/node'
 import {invariant} from '@arcath/utils'
 import {useLoaderData} from '@remix-run/react'
 
@@ -15,7 +20,7 @@ import {
   buttonClasses
 } from '~/lib/classes'
 
-export const loader = async ({request, params}: LoaderArgs) => {
+export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
 
   if (!user || user.type !== 'STAFF') {
@@ -31,7 +36,7 @@ export const loader = async ({request, params}: LoaderArgs) => {
   return json({user, printer})
 }
 
-export const action = async ({request, params}: ActionArgs) => {
+export const action = async ({request, params}: ActionFunctionArgs) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
 
   if (!user || user.type !== 'STAFF') {

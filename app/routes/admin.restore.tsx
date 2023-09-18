@@ -1,5 +1,5 @@
 import {
-  type ActionArgs,
+  type ActionFunctionArgs,
   redirect,
   unstable_parseMultipartFormData,
   unstable_composeUploadHandlers,
@@ -12,7 +12,7 @@ import {getUPNFromHeaders, getUserFromUPN} from '~/lib/user.server'
 
 import {addJob} from '~/lib/queues.server'
 
-export const action = async ({request}: ActionArgs) => {
+export const action = async ({request}: ActionFunctionArgs) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
 
   if (!user || !user.admin) {

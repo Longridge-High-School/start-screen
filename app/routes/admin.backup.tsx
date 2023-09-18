@@ -1,4 +1,8 @@
-import {type LoaderArgs, json, type ActionArgs} from '@remix-run/node'
+import {
+  type LoaderFunctionArgs,
+  json,
+  type ActionFunctionArgs
+} from '@remix-run/node'
 import {Form, useActionData, useLoaderData} from '@remix-run/react'
 import {useState} from 'react'
 import fs from 'fs'
@@ -10,7 +14,7 @@ import {addJob} from '~/lib/queues.server'
 
 import {buttonClasses, labelClasses, labelSpanClasses} from '~/lib/classes'
 
-export const loader = async ({request}: LoaderArgs) => {
+export const loader = async ({request}: LoaderFunctionArgs) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
 
   if (!user || !user.admin) {
@@ -23,7 +27,7 @@ export const loader = async ({request}: LoaderArgs) => {
   return json({files})
 }
 
-export const action = async ({request}: ActionArgs) => {
+export const action = async ({request}: ActionFunctionArgs) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
 
   if (!user || !user.admin) {

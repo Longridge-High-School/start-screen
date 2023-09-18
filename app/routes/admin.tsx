@@ -1,9 +1,9 @@
-import {json, type LoaderArgs} from '@remix-run/node'
+import {json, type LoaderFunctionArgs} from '@remix-run/node'
 import {Outlet} from '@remix-run/react'
 
 import {getUPNFromHeaders, getUserFromUPN} from '~/lib/user.server'
 
-export const loader = async ({request}: LoaderArgs) => {
+export const loader = async ({request}: LoaderFunctionArgs) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
 
   if (!user || !user.admin) {

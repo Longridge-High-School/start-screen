@@ -1,6 +1,6 @@
 import {
-  type ActionArgs,
-  type LoaderArgs,
+  type ActionFunctionArgs,
+  type LoaderFunctionArgs,
   json,
   redirect,
   unstable_parseMultipartFormData,
@@ -27,7 +27,7 @@ import {
   labelInfoClasses
 } from '~/lib/classes'
 
-export const loader = async ({request, params}: LoaderArgs) => {
+export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
 
   if (!user || user.type !== 'STAFF') {
@@ -43,7 +43,7 @@ export const loader = async ({request, params}: LoaderArgs) => {
   return json({user, advert})
 }
 
-export const action = async ({request, params}: ActionArgs) => {
+export const action = async ({request, params}: ActionFunctionArgs) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
 
   if (!user || user.type !== 'STAFF') {

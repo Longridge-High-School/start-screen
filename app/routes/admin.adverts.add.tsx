@@ -1,6 +1,6 @@
 import {
-  type ActionArgs,
-  type LoaderArgs,
+  type ActionFunctionArgs,
+  type LoaderFunctionArgs,
   json,
   redirect,
   unstable_parseMultipartFormData,
@@ -25,7 +25,7 @@ import {
   buttonClasses
 } from '~/lib/classes'
 
-export const loader = async ({request}: LoaderArgs) => {
+export const loader = async ({request}: LoaderFunctionArgs) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
 
   if (!user || user.type !== 'STAFF') {
@@ -35,7 +35,7 @@ export const loader = async ({request}: LoaderArgs) => {
   return json({user})
 }
 
-export const action = async ({request}: ActionArgs) => {
+export const action = async ({request}: ActionFunctionArgs) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
 
   if (!user || user.type !== 'STAFF') {

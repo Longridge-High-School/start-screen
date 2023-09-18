@@ -1,6 +1,6 @@
 import {
-  type LoaderArgs,
-  type ActionArgs,
+  type LoaderFunctionArgs,
+  type ActionFunctionArgs,
   json,
   redirect,
   type LinksFunction,
@@ -36,7 +36,7 @@ export const links: LinksFunction = () => {
   return [{rel: 'stylesheet', href: styles}]
 }
 
-export const loader = async ({request, params}: LoaderArgs) => {
+export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const {time, getHeader} = createTimings()
 
   const user = await time('getUser', 'Get User from header', () =>
@@ -62,7 +62,7 @@ export const loader = async ({request, params}: LoaderArgs) => {
   )
 }
 
-export const action = async ({request, params}: ActionArgs) => {
+export const action = async ({request, params}: ActionFunctionArgs) => {
   const {time, getHeader} = createTimings()
 
   const user = await time('getUser', 'Get User from header', () =>

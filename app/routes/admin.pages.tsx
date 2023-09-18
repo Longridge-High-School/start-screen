@@ -1,4 +1,9 @@
-import {type LoaderArgs, type ActionArgs, json, redirect} from '@remix-run/node'
+import {
+  type LoaderFunctionArgs,
+  type ActionFunctionArgs,
+  json,
+  redirect
+} from '@remix-run/node'
 import {Outlet, useLoaderData} from '@remix-run/react'
 import {invariant} from '@arcath/utils'
 
@@ -13,7 +18,7 @@ import {
   labelSpanClasses
 } from '~/lib/classes'
 
-export const loader = async ({request}: LoaderArgs) => {
+export const loader = async ({request}: LoaderFunctionArgs) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
 
   if (!user || !user.admin) {
@@ -36,7 +41,7 @@ export const loader = async ({request}: LoaderArgs) => {
   return json({pages, user})
 }
 
-export const action = async ({request}: ActionArgs) => {
+export const action = async ({request}: ActionFunctionArgs) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
 
   if (!user || user.type !== 'STAFF') {

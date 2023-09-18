@@ -1,4 +1,4 @@
-import {type LoaderArgs, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, json} from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
 
 import {getShortcutsForUser} from '~/lib/prisma'
@@ -6,7 +6,7 @@ import {getUserFromUPN, getUPNFromHeaders} from '~/lib/user.server'
 
 import {Button} from '~/lib/components/boxes/button'
 
-export const loader = async ({request}: LoaderArgs) => {
+export const loader = async ({request}: LoaderFunctionArgs) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
 
   const {shortcuts} = await getShortcutsForUser(user, request, Infinity, false)

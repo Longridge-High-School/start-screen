@@ -1,12 +1,12 @@
 import {
-  type LoaderArgs,
+  type LoaderFunctionArgs,
   type HeadersArgs,
   redirect,
   json
 } from '@remix-run/node'
 import {useEffect} from 'react'
 import {diffArray, pick, increment} from '@arcath/utils'
-import {useLoaderData, useCatch, useSearchParams} from '@remix-run/react'
+import {useLoaderData, useSearchParams} from '@remix-run/react'
 import {format} from 'date-fns'
 
 import {Button} from '~/lib/components/boxes/button'
@@ -23,7 +23,7 @@ import {getSupplyLevels} from '~/lib/printers.server'
 
 import {COMPONENT_STATUS} from '~/utils/constants'
 
-export const loader = async ({request}: LoaderArgs) => {
+export const loader = async ({request}: LoaderFunctionArgs) => {
   const {time, getHeader} = createTimings()
   const user = await time('getUser', 'Get User from header', () =>
     getUserFromUPN(getUPNFromHeaders(request))
@@ -506,22 +506,6 @@ const StartPage = () => {
           })}
         </div>
       </div>
-    </div>
-  )
-}
-
-export const CatchBoundary = () => {
-  const {status, data} = useCatch()
-
-  return (
-    <div className="bg-white w-1/2 mt-12 mx-auto rounded-xl border border-red-500 p-4">
-      <h1 className="mb-4 text-xl text-red-500">Error {status}</h1>
-      <p className="mb-2">
-        Something went wrong. Try a hard refresh (Ctrl+F5) and if that doesn't
-        fix it contact IT with the error below.
-      </p>
-      <p>Details:</p>
-      <p className="bg-gray-300 opacity-50 rounded-lg p-2">{data}</p>
     </div>
   )
 }
