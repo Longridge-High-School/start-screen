@@ -14,7 +14,7 @@
     "remix:dev": "remix dev",
     "postinstall": "remix setup node",
     "start": "concurrently \"npm:start:app\" \"npm:start:worker\"",
-    "start:app": "cross-env NODE_ENV=production remix-serve build",
+    "start:app": "cross-env NODE_ENV=production remix-serve ./build/index.js",
     "start:worker": "cross-env NODE_ENV=production node ./worker/worker.mjs",
     "docker": "prisma migrate deploy && prisma generate && npm run start",
     "lint": "eslint --ext js,jsx,ts,tsx .",
