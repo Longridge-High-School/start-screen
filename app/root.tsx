@@ -133,6 +133,9 @@ export const ErrorBoundary = () => {
         >
           {data}
         </p>
+        <p>
+          <a href="https://www.google.com">Continue to Google</a>
+        </p>
       </div>
     )
   }
@@ -151,6 +154,9 @@ export const ErrorBoundary = () => {
       <p className="mb-2">
         Something went wrong. Try a hard refresh (Ctrl+F5) and if that doesn't
         fix it contact IT with the error below.
+      </p>
+      <p>
+        <a href="https://www.google.com">Continue to Google</a>
       </p>
     </div>
   )
