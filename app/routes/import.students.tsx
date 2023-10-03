@@ -39,7 +39,7 @@ export const action: ActionFunction = async ({request}) => {
   const students = JSON.parse(jsonData) as {
     name: string
     username: string
-    upn: string
+    upn: string | null
     yearGroup: string
     regGroup: string
   }[]
@@ -54,7 +54,7 @@ export const action: ActionFunction = async ({request}) => {
       if (user) {
         user.username = username
         user.name = name
-        user.upn = upn
+        user.upn = upn ? upn : user.upn
         user.type = 'STUDENT'
         user.yearGroup = yearGroup
         user.formGroup = regGroup
@@ -67,7 +67,7 @@ export const action: ActionFunction = async ({request}) => {
       const newUser = {
         username,
         name,
-        upn,
+        upn: upn ? upn : '',
         type: 'STUDENT' as const,
         yearGroup,
         formGroup: regGroup
