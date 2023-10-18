@@ -61,7 +61,8 @@ export const action = async ({request}: ActionFunctionArgs) => {
 }
 
 const AdminIndex = () => {
-  const {usersCount, doodlesCount, advertsCount} = useLoaderData()
+  const {usersCount, doodlesCount, advertsCount} =
+    useLoaderData<typeof loader>()
   const data = useActionData<typeof action>()
 
   return (

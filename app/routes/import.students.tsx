@@ -1,7 +1,6 @@
 import type {ActionFunction} from '@remix-run/node'
 
 import {json} from '@remix-run/node'
-import {asyncForEach} from '@arcath/utils'
 
 import {getPrisma} from '~/lib/prisma'
 import {getConfigValue} from '~/lib/config.server'

@@ -60,7 +60,7 @@ export const action = async ({request}: ActionFunctionArgs) => {
 }
 
 const SetupPage = () => {
-  const {upn} = useLoaderData()
+  const {upn} = useLoaderData<typeof loader>()
 
   return (
     <div className="rounded-xl shadow bg-white mt-24 w-1/2 m-auto p-2">

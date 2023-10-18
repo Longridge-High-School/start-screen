@@ -1,7 +1,6 @@
 import {type LoaderFunctionArgs, json, type HeadersArgs} from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
 import {pick, diffArray} from '@arcath/utils'
-import {format} from 'date-fns'
 
 import {createTimings} from '~/utils/timings.server'
 import {getUPNFromHeaders, getUserFromUPN} from '~/lib/user.server'
@@ -103,7 +102,8 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
       hasOverflow,
       scopes,
       levels,
-      advert
+      advert,
+      snowScript
     },
     {
       headers: {'Server-Timing': getHeader()}
@@ -116,17 +116,8 @@ export const headers = ({loaderHeaders}: HeadersArgs) => {
 }
 
 const StartPage = () => {
-  const {
-    headerStrip,
-    user,
-    doodle,
-    logo,
-    title,
-    dateFormat,
-    shortcuts,
-    levels,
-    advert
-  } = useLoaderData<typeof loader>()
+  const {headerStrip, user, doodle, logo, title, shortcuts, levels, advert} =
+    useLoaderData<typeof loader>()
 
   return (
     <div>
