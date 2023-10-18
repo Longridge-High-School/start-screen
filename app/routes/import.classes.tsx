@@ -12,7 +12,7 @@ export const action = async ({request}: ActionFunctionArgs) => {
   await log('Imports', 'Starting class import')
 
   if (!token || token !== importKey) {
-    await log('Imports', 'Invalid token on timetable import')
+    await log('Imports', 'Invalid token on class import')
     return json({error: 'invalid Token'}, 403)
   }
 
@@ -54,7 +54,7 @@ export const action = async ({request}: ActionFunctionArgs) => {
     where: {type: 'STUDENT'},
     select: {id: true, upn: true}
   })
-  const studentsByUPN = indexedBy('upn', dbStudents)
+  const studentsByUPN = indexedBy('upn', dbStudents, {collide: true})
 
   await asyncForEach(keys(classes), async key => {
     const {name, students, teacherUsername} = classes[key]

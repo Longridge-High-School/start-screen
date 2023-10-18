@@ -46,37 +46,42 @@ export const action: ActionFunction = async ({request}) => {
 
   const prisma = getPrisma()
 
-  await asyncForEach(
-    students,
-    async ({username, upn, yearGroup, regGroup, name}) => {
-      const user = await prisma.user.findFirst({where: {username}})
+  const promises = students.map(
+    ({username, upn, yearGroup, regGroup, name}) => {
+      return new Promise(async () => {
+        const user = await prisma.user.findFirst({where: {username}})
 
-      if (user) {
-        user.username = username
-        user.name = name
-        user.upn = upn ? upn : user.upn
-        user.type = 'STUDENT'
-        user.yearGroup = yearGroup
-        user.formGroup = regGroup
+        if (user) {
+          user.username = username
+          user.name = name
+          user.upn = upn ? upn : user.upn
+          user.type = 'STUDENT'
+          user.yearGroup = yearGroup
+          user.formGroup = regGroup
 
-        await prisma.user.update({where: {id: user.id}, data: user})
+          await prisma.user.update({where: {id: user.id}, data: user})
 
-        return
-      }
+          return
+        }
 
-      const newUser = {
-        username,
-        name,
-        upn: upn ? upn : '',
-        type: 'STUDENT' as const,
-        yearGroup,
-        formGroup: regGroup
-      }
+        const newUser = {
+          username,
+          name,
+          upn: upn ? upn : '',
+          type: 'STUDENT' as const,
+          yearGroup,
+          formGroup: regGroup
+        }
 
-      await prisma.user.create({data: newUser})
-      await log('Imports', `Added new student ${newUser.username}`)
+        await prisma.user.create({data: newUser})
+        await log('Imports', `Added new student ${newUser.username}`)
+      }).catch(async reason => {
+        await log('Imports', `Could not import ${username}`)
+      })
     }
   )
+
+  await Promise.all(promises)
 
   const usernames = students.reduce((names, {username}) => {
     return [...names, username]
