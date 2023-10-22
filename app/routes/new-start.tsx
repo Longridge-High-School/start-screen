@@ -15,6 +15,14 @@ import {TabedBox, Tab} from '~/lib/components/tabed-box'
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const {time, getHeader} = createTimings()
 
+  const url = new URL(request.url)
+  const doodleIdString = url.searchParams.get('doodle')
+  let doodleId = 0
+
+  if (doodleIdString) {
+    doodleId = parseInt(doodleIdString)
+  }
+
   const user = await time('getUser', 'Get User from header', () =>
     getUserFromUPN(getUPNFromHeaders(request))
   )
@@ -35,6 +43,10 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
   )
 
   const doodle = await time('getDoodle', 'Get doodle', async () => {
+    if (doodleId !== 0) {
+      return prisma.doodle.findFirstOrThrow({where: {id: doodleId}})
+    }
+
     const today = new Date()
     const doodleDate = new Date(
       `${today.getFullYear()}-${(today.getMonth() + 1)
@@ -128,13 +140,13 @@ const StartPage = () => {
           ''
         )}
       </div>
-      <div className="grid grid-cols-3 gap-8 p-4 h-full">
+      <div className="grid grid-cols-start gap-8 p-4 h-full">
         <TabedBox>
           <Tab icon="🔎">
             <div className="p-2 text-center col-span-2 grid grid-cols-4">
               <img
                 src={logo}
-                className="w-32 mx-auto pt-4 row-span-2"
+                className="h-[calc(100%-3rem)] mx-auto pt-4 row-span-2"
                 alt="Logo"
               />
               <div className="col-span-3">
@@ -158,12 +170,12 @@ const StartPage = () => {
                 <img src="/img/google.jpg" className="h-16" alt="Google Logo" />
                 <input
                   type="search"
-                  className="border border-black rounded w-full col-span-2 my-2 p-2"
+                  className="border border-black rounded w-full h-16 col-span-2 my-2 p-2"
                   name="q"
                 />
                 <button
                   type="submit"
-                  className="bg-gray-200 rounded m-2 border-2 border-gray-200 hover:border-gray-400"
+                  className="bg-gray-200 h-16 rounded m-2 border-2 border-gray-200 hover:border-gray-400"
                 >
                   Google Search
                 </button>

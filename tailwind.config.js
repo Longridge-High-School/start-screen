@@ -8,7 +8,8 @@ module.exports = {
         'brand-light': 'rgb(var(--color-brand-light) / <alpha-value>)'
       },
       gridTemplateColumns: {
-        'start-page': 'minmax(auto, 10vw) auto minmax(auto, 10vw)'
+        'start-page': 'minmax(auto, 10vw) auto minmax(auto, 10vw)',
+        start: '1fr 1fr 350px'
       },
       typography: {
         DEFAULT: {
