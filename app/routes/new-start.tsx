@@ -11,6 +11,7 @@ import {getSupplyLevels} from '~/lib/printers.server'
 import {MDXComponent} from '~/lib/mdx'
 import {Doodle} from '~/lib/components/doodle'
 import {TabedBox, Tab} from '~/lib/components/tabed-box'
+import {COMPONENT_STATUS} from '~/utils/constants'
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const {time, getHeader} = createTimings()
@@ -102,6 +103,83 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
       : null
   })
 
+  const message = await time(
+    'getMessagesForUser',
+    'Get messages for the current user',
+    async () => {
+      const today = new Date()
+
+      const messageDate = new Date(
+        `${today.getFullYear()}-${(today.getMonth() + 1)
+          .toString()
+          .padStart(2, '0')}-${today
+          .getDate()
+          .toString()
+          .padStart(2, '0')} 00:00:00+0000`
+      )
+
+      const activeMessages = await prisma.infoMessage.findMany({
+        where: {
+          startDate: {lte: messageDate},
+          endDate: {gte: messageDate}
+        },
+        orderBy: {endDate: 'asc'}
+      })
+
+      const messages = activeMessages.filter(({scopes: messageScopes}) => {
+        const {common} = diffArray(scopes, messageScopes)
+
+        if (common.length > 0) {
+          return true
+        }
+
+        let matched = false
+
+        messageScopes.forEach(scope => {
+          if (scope[0] === '/') {
+            scopes.forEach(s => {
+              if (s === user?.username) {
+                return
+              }
+
+              const regex = new RegExp(scope.slice(1, -1))
+
+              const matches = regex.exec(s)
+
+              if (matches) {
+                matched = true
+              }
+            })
+          }
+        })
+
+        return matched
+      })
+
+      if (messages[0]) {
+        return messages[0]
+      }
+
+      return undefined
+    }
+  )
+
+  const components = await time('getComponents', 'Get Components', async () => {
+    if (user.type !== 'STAFF') {
+      return []
+    }
+
+    return prisma.componentGroup.findMany({
+      orderBy: {order: 'asc'},
+      include: {
+        components: {
+          select: {id: true, name: true, state: true},
+          orderBy: {name: 'asc'}
+        }
+      }
+    })
+  })
+
   return json(
     {
       title,
@@ -115,7 +193,9 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
       scopes,
       levels,
       advert,
-      snowScript
+      snowScript,
+      message,
+      components
     },
     {
       headers: {'Server-Timing': getHeader()}
@@ -128,8 +208,33 @@ export const headers = ({loaderHeaders}: HeadersArgs) => {
 }
 
 const StartPage = () => {
-  const {headerStrip, user, doodle, logo, title, shortcuts, levels, advert} =
-    useLoaderData<typeof loader>()
+  const {
+    headerStrip,
+    user,
+    doodle,
+    logo,
+    title,
+    shortcuts,
+    levels,
+    advert,
+    message,
+    components
+  } = useLoaderData<typeof loader>()
+
+  let messageColors = ''
+
+  if (message) {
+    switch (message.type) {
+      case 'Danger':
+        messageColors = 'bg-red-500 border-red-600'
+        break
+      case 'Warning':
+        messageColors = 'bg-yellow-500 border-yellow-600'
+        break
+      default:
+        messageColors = 'bg-blue-500 border-blue-600'
+    }
+  }
 
   return (
     <div>
@@ -140,13 +245,24 @@ const StartPage = () => {
           ''
         )}
       </div>
+      {message ? (
+        <a
+          className={`mx-4 mt-4 border-2 shadow-xl bg-opacity-75 p-1 block text-black ${messageColors}`}
+          href={message.target}
+        >
+          <strong>{message.title}</strong>
+          <p dangerouslySetInnerHTML={{__html: message.message}} />
+        </a>
+      ) : (
+        ''
+      )}
       <div className="grid grid-cols-start gap-8 p-4 h-full">
         <TabedBox>
           <Tab icon="🔎">
             <div className="p-2 text-center col-span-2 grid grid-cols-4">
               <img
                 src={logo}
-                className="h-[calc(100%-3rem)] mx-auto pt-4 row-span-2"
+                className="h-[12rem] my-auto mx-auto pt-4 row-span-2"
                 alt="Logo"
               />
               <div className="col-span-3">
@@ -222,7 +338,32 @@ const StartPage = () => {
               })}
             </div>
           </Tab>
-          <Tab icon="🩺">Widget</Tab>
+          {components.length > 0 ? (
+            <Tab icon="🩺">
+              <div className="p-4">
+                <h2 className="text-3xl mb-2">System Status</h2>
+                <div className="flex">
+                  {components.map(({name, id, components}) => {
+                    return (
+                      <div key={id} className="grow">
+                        <h3 className="text-lg">{name}</h3>
+                        <ul>
+                          {components.map(({id, name, state}) => {
+                            return (
+                              <li key={id}>
+                                {COMPONENT_STATUS[state].icon} {name}
+                              </li>
+                            )
+                          })}
+                        </ul>
+                      </div>
+                    )
+                  })}
+                </div>
+                <a href="/system-status">More Details</a>
+              </div>
+            </Tab>
+          ) : undefined}
         </TabedBox>
         <div className="row-span-2 h-[40rem] grid">
           <Doodle doodle={doodle} currentUser={user!.username} />

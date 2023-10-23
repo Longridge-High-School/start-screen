@@ -1,8 +1,8 @@
 import {useState, type FC, type ReactElement} from 'react'
 
-export const TabedBox: FC<{children: ReactElement<typeof Tab>[]}> = ({
-  children
-}) => {
+export const TabedBox: FC<{
+  children: (ReactElement<typeof Tab> | undefined)[]
+}> = ({children}) => {
   const [openTab, setOpenTab] = useState(0)
 
   return (
@@ -12,6 +12,10 @@ export const TabedBox: FC<{children: ReactElement<typeof Tab>[]}> = ({
       </div>
       <div className="w-16 flex flex-col">
         {children.map((child, i) => {
+          if (child === undefined) {
+            return
+          }
+
           return (
             <button
               key={i}
