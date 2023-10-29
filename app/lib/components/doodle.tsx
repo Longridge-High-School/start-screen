@@ -10,7 +10,7 @@ export const Doodle = ({
   currentUser: string
 }) => {
   return (
-    <div className="col-span-1 col-start-2 row-span-2 lg:col-span-1 2xl:row-span-2 2xl:col-start-5">
+    <div>
       {doodle ? (
         <MDXComponent code={doodle.bodyCache} currentUser={currentUser} />
       ) : (
