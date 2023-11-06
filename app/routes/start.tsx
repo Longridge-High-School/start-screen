@@ -370,7 +370,7 @@ const StartPage = () => {
           <Doodle doodle={doodle} currentUser={user!.username} />
         </div>
         <div className="col-span-2 row-span-2">
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-3 xl:grid-cols-4 gap-4">
             {shortcuts.map(({id, title, icon, target}) => {
               return (
                 <a
