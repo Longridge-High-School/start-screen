@@ -40,7 +40,7 @@ export const action: ActionFunction = async ({request}) => {
     username: string
     upn: string | null
     yearGroup: string
-    regGroup: string
+    regGroup: string | null
   }[]
 
   const prisma = getPrisma()
@@ -56,7 +56,7 @@ export const action: ActionFunction = async ({request}) => {
           user.upn = upn ? upn : user.upn
           user.type = 'STUDENT'
           user.yearGroup = yearGroup
-          user.formGroup = regGroup
+          user.formGroup = regGroup ? regGroup : 'UNKOWN'
 
           await prisma.user.update({where: {id: user.id}, data: user})
 
@@ -69,7 +69,7 @@ export const action: ActionFunction = async ({request}) => {
           upn: upn ? upn : '',
           type: 'STUDENT' as const,
           yearGroup,
-          formGroup: regGroup
+          formGroup: regGroup ? regGroup : 'UNKOWN'
         }
 
         await prisma.user.create({data: newUser})
