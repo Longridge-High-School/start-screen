@@ -9,7 +9,10 @@ import {Button} from './components/boxes/button'
 
 export const getMDXComponent = (
   code: string,
-  {currentUser}: {currentUser: string} = {currentUser: ''}
+  {currentUser, startScreen}: {currentUser: string; startScreen: boolean} = {
+    currentUser: '',
+    startScreen: false
+  }
 ) => {
   return gmc(code, {
     useHydrated,
@@ -19,20 +22,23 @@ export const getMDXComponent = (
     useTransform,
     TickBox,
     Button,
-    dateFns
+    dateFns,
+    startScreen
   })
 }
 
 export const MDXComponent = ({
   code,
-  currentUser
+  currentUser,
+  startScreen
 }: {
   code: string
   currentUser: string
+  startScreen: boolean
 }) => {
   const Component = useMemo(
-    () => getMDXComponent(code, {currentUser}),
-    [code, currentUser]
+    () => getMDXComponent(code, {currentUser, startScreen}),
+    [code, currentUser, startScreen]
   )
 
   return <Component />

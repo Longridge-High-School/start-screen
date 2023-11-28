@@ -100,7 +100,7 @@ const DoodleComponent = ({
   currentUser: string
 }) => {
   const Component = useMemo(
-    () => getMDXComponent(code, {currentUser}),
+    () => getMDXComponent(code, {currentUser, startScreen: false}),
     [code, currentUser]
   )
 

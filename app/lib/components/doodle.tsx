@@ -4,15 +4,21 @@ import {MDXComponent} from '../mdx'
 
 export const Doodle = ({
   doodle,
-  currentUser
+  currentUser,
+  startScreen
 }: {
   doodle: Pick<DBDoodle, 'bodyCache'> | null
   currentUser: string
+  startScreen: boolean
 }) => {
   return (
     <div>
       {doodle ? (
-        <MDXComponent code={doodle.bodyCache} currentUser={currentUser} />
+        <MDXComponent
+          code={doodle.bodyCache}
+          currentUser={currentUser}
+          startScreen={startScreen}
+        />
       ) : (
         ''
       )}

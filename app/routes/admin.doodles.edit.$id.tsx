@@ -116,18 +116,18 @@ export const headers = ({loaderHeaders, actionHeaders}: HeadersArgs) => {
 }
 
 const AdminDoodlesEdit = () => {
-  const doodleClasses = ['w-[360px] h-[820px]', 'w-[680px] h-[560px]']
-
   const {doodle, user} = useLoaderData<typeof loader>()
   const [preview, setPreview] = useState(doodle.bodyCache)
   const [body, setBody] = useState(doodle.body)
-  const [doodleClass, setDoodleClass] = useState(0)
   const [currentUser, setCurrentUser] = useState(user.username)
+  const [startScreen, setStartScreen] = useState(true)
 
   const Preview = useMemo(
     () =>
-      preview === '' ? () => <div /> : getMDXComponent(preview, {currentUser}),
-    [preview, currentUser]
+      preview === ''
+        ? () => <div />
+        : getMDXComponent(preview, {currentUser, startScreen}),
+    [preview, currentUser, startScreen]
   )
 
   const updatePreview = async () => {
@@ -211,25 +211,22 @@ const AdminDoodlesEdit = () => {
       </div>
       <div>
         <div className="grid grid-cols-2 gap-2 mb-2">
-          <button
-            className={buttonClasses('bg-blue-300', ['col-start-1'])}
-            onClick={() => setDoodleClass(0)}
-          >
-            16:9 Screen
-          </button>
-          <button
-            className={buttonClasses('bg-blue-300')}
-            onClick={() => setDoodleClass(1)}
-          >
-            4:3 Screen
-          </button>
           <input
             className={inputClasses()}
             value={currentUser}
             onChange={e => setCurrentUser(e.target.value)}
           />
+          <button
+            className={buttonClasses('bg-blue-300', [
+              'col-start-1',
+              'col-span-2'
+            ])}
+            onClick={() => setStartScreen(!startScreen)}
+          >
+            {startScreen ? 'Disable Start Screen' : 'Enable Start Screen'}
+          </button>
         </div>
-        <div className={`${doodleClasses[doodleClass]} m-auto`}>
+        <div className={`w-[360px] h-[820px] m-auto`}>
           {preview !== '' ? <Preview /> : ''}
         </div>
       </div>

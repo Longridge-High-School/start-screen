@@ -241,7 +241,11 @@ const StartPage = () => {
     <div>
       <div className="text-center bg-brand-dark text-white text-xl p-2">
         {headerStrip !== '' ? (
-          <MDXComponent code={headerStrip} currentUser={user!.username} />
+          <MDXComponent
+            code={headerStrip}
+            currentUser={user!.username}
+            startScreen={false}
+          />
         ) : (
           ''
         )}
@@ -367,7 +371,11 @@ const StartPage = () => {
           ) : undefined}
         </TabedBox>
         <div className="row-span-2 h-[40rem] grid">
-          <Doodle doodle={doodle} currentUser={user!.username} />
+          <Doodle
+            doodle={doodle}
+            currentUser={user!.username}
+            startScreen={true}
+          />
         </div>
         <div className="col-span-2 row-span-2">
           <div className="grid grid-cols-3 xl:grid-cols-4 gap-4">
