@@ -100,7 +100,10 @@ const AcceptableUsePolicy = () => {
   const {user, aup} = useLoaderData<typeof loader>()
   const [signature, setSignature] = useState('')
 
-  const AUP = getMDXComponent(aup, {currentUser: user.username})
+  const AUP = getMDXComponent(aup, {
+    currentUser: user.username,
+    startScreen: false
+  })
 
   return (
     <div>

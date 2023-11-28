@@ -33,7 +33,7 @@ const DoodlePreview = () => {
   const [doodleClass, setDoodleClass] = useState(0)
 
   const Preview = useMemo(
-    () => getMDXComponent(doodle.bodyCache, {currentUser}),
+    () => getMDXComponent(doodle.bodyCache, {currentUser, startScreen: true}),
     [doodle.bodyCache, currentUser]
   )
 
