@@ -56,7 +56,8 @@ module.exports = {
     'is-alphanumerical',
     'is-alphabetical',
     'character-reference-invalid',
-    'decode-named-character-reference'
+    'decode-named-character-reference',
+    'devlop'
   ],
   serverModuleFormat: 'cjs',
   future: {}

@@ -129,6 +129,11 @@ export const ConfigDefaults = {
     value: '365',
     description:
       'The maximum age of doodles to display on the doodles page (in days)'
+  },
+  streamURL: {
+    value: '',
+    description:
+      'The dash URL of the stream to be played on the live streams page.'
   }
 } as const
 
