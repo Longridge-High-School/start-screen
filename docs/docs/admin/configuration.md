@@ -90,6 +90,15 @@ The Pre-Shared key for your Guest Network.
 Set this to a [plausible analytics](https://plausible.io/) domain to enable
 analytics.
 
-## snowScript
+## snowScript (deprecated)
 
 Set this to `yes` to enable a snow script on the start page.
+
+## maximumDoodleAge
+
+The maximum age for doodles to be displayed on the doodle page in days.
+
+## streamURL
+
+The URL to the `.mpd` file that will be used on the
+[live stream](/features/live) page.

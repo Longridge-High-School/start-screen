@@ -12,6 +12,10 @@ Date-scoped MDX Components to brighten up the start page.
 
 Voucher code creation and logging for a UniFi Guest Network.
 
+## [Live](/features/live)
+
+Dash Live Stream viewing.
+
 ## [Messages](/features/messages)
 
 Info messages that appear on the start page.
