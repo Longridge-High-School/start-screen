@@ -7,6 +7,9 @@ export const compileMDX = async (mdx: string) => {
       'lib-hooks-use-hydrated': 'useHydrated',
       'data-current-user': 'currentUser',
       'framer-motion/motion': 'motion'
+    },
+    mdxOptions: () => {
+      return {}
     }
   })
 
