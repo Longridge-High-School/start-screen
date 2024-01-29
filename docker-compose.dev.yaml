@@ -16,3 +16,15 @@ services:
       - ./data/redis:/data
     ports:
       - 6379:6379
+  rtmp:
+    image: longridgehighschool/nginx-rtmp-ssl:main
+    restart: always
+    environment:
+      SERVER_NAME: rtmp.dev
+      RTMP_PUBLISH_URLS: http://host.docker.internal:3000/live/api/play
+      RTMP_DONE_URLS: http://host.docker.internal:3000/live/api/done
+    volumes:
+      - ./data/ssl:/var/ssl
+    ports:
+      - '1935:1935'
+      - '8443:443'

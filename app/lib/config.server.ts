@@ -133,7 +133,7 @@ export const ConfigDefaults = {
   streamURL: {
     value: '',
     description:
-      'The dash URL of the stream to be played on the live streams page.'
+      'The URL of the dash stream minus the stream key/file with a trailing slash type. E.g. https://rtmp.school.county.sch.uk/dash/live/'
   }
 } as const
 

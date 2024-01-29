@@ -184,3 +184,12 @@ model Incident {
   updatedAt   DateTime       @default(now()) @updatedAt
   open        Boolean        @default(true)
 }
+
+model LiveStream {
+  id               Int     @id @default(autoincrement())
+  title            String
+  live             Boolean @default(false)
+  key              String  @unique
+  description      String  @default("")
+  descriptionCache String  @default("")
+}
