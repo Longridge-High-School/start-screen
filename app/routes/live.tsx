@@ -3,6 +3,7 @@ import {useLoaderData} from '@remix-run/react'
 import {useState, useEffect, useRef} from 'react'
 import dashjs from '~/lib/dash.client'
 import {type LiveStream} from '@prisma/client'
+import {formatDistance} from 'date-fns'
 
 import {getUPNFromHeaders, getUserFromUPN} from '~/lib/user.server'
 import {getConfigValue} from '~/lib/config.server'
@@ -41,7 +42,9 @@ const Live = () => {
   const {streamUrl, streams} = useLoaderData<typeof loader>()
 
   const [start, setStart] = useState<boolean>(false)
-  const [selectedStream, setSelectedStream] = useState<LiveStream | undefined>()
+  const [selectedStream, setSelectedStream] = useState<
+    Pick<LiveStream, 'id' | 'key'> | undefined
+  >()
 
   const videoRef = useRef(null)
   const playerRef = useRef<dashjs.MediaPlayerClass | null>(null)
@@ -97,6 +100,11 @@ const Live = () => {
               >
                 Join Stream
               </button>
+              <br />
+              <i>
+                Started {formatDistance(new Date(stream.updatedAt), new Date())}{' '}
+                ago
+              </i>
             </div>
           )
         })}
