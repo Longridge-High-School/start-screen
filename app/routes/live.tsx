@@ -8,6 +8,7 @@ import {getUPNFromHeaders, getUserFromUPN} from '~/lib/user.server'
 import {getConfigValue} from '~/lib/config.server'
 import {getPrisma} from '~/lib/prisma'
 import {buttonClasses} from '~/lib/classes'
+import {getMDXComponent} from '~/lib/mdx'
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))
@@ -69,12 +70,24 @@ const Live = () => {
 
   if (!start) {
     return (
-      <div className="mx-96 bg-white rounded-xl p-2 shadow-xl mt-12 grid grid-cols-3">
+      <div className="mx-96 bg-white rounded-xl p-2 shadow-xl mt-12 grid grid-cols-2 gap-4">
         <h3 className="text-xl col-span-3">Live Streams</h3>
+        {streams.length === 0 ? (
+          <div className="col-span-3 text-center">
+            <i>There are no streams currently running.</i>
+          </div>
+        ) : (
+          ''
+        )}
         {streams.map(stream => {
+          const Description = getMDXComponent(stream.descriptionCache)
+
           return (
             <div key={stream.id} className="text-center my-2">
               <h4 className="text-lg mb-2">{stream.title}</h4>
+              <div className="mb-4">
+                <Description />
+              </div>
               <button
                 className={buttonClasses()}
                 onClick={() => {

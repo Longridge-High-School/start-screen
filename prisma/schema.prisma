@@ -186,10 +186,12 @@ model Incident {
 }
 
 model LiveStream {
-  id               Int     @id @default(autoincrement())
+  id               Int      @id @default(autoincrement())
   title            String
-  live             Boolean @default(false)
-  key              String  @unique
-  description      String  @default("")
-  descriptionCache String  @default("")
+  live             Boolean  @default(false)
+  key              String   @unique
+  description      String   @default("")
+  descriptionCache String   @default("")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @default(now()) @updatedAt
 }
