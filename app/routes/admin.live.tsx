@@ -41,6 +41,12 @@ const AdminLive = () => {
     <div className="grid grid-cols-2">
       <div className="bg-white shadow rounded-xl m-4 p-2">
         <h1 className="text-3xl mb-2">Live Streams</h1>
+        <a
+          href="/admin/live/add"
+          className="m-4 rounded bg-green-300 text-white p-2 shadow"
+        >
+          Add Live Stream
+        </a>
         <table className="w-full">
           <thead>
             <tr>
