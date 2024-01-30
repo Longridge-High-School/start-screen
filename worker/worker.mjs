@@ -23,6 +23,7 @@ cron.schedule('0 0 0 * * *', async () => {
   // Clear old incidents at midnight
   await queue.add('clearIncidents', {})
   await queue.add('clearMessages', {})
+  await queue.add('endLiveStreams', {})
 })
 
 cron.schedule('0 0 0 * * 7', async () => {
@@ -257,4 +258,8 @@ createHandler('restoreBackup', async ({data}) => {
   await rm(path.join(BACKUPS_DIR, 'restore'), {recursive: true, force: true})
 
   return
+})
+
+createHandler('endLiveStreams', async () => {
+  await prisma.liveStream.updateMany({data: {live: false}})
 })

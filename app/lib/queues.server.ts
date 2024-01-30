@@ -14,6 +14,7 @@ export type Jobs = {
   }
   createBackup: {}
   restoreBackup: {filePath: string}
+  endLiveStreams: {}
 }
 
 export type JobName = keyof Jobs

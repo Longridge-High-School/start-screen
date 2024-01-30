@@ -102,3 +102,8 @@ The maximum age for doodles to be displayed on the doodle page in days.
 
 The URL to the `.mpd` file that will be used on the
 [live stream](/features/live) page.
+
+## streamReactions
+
+A comma seperated list of emoji to be shown on live streams. For example
+`🟢,🔴,🔈,🔊`

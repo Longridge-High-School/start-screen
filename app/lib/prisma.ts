@@ -59,6 +59,19 @@ export const getScopesForUser = async (user: User, request: Request) => {
           scopes.push(name.toLowerCase())
         }
       })
+
+      const streams = await prisma.liveStream.findMany({
+        select: {id: true},
+        where: {live: true}
+      })
+
+      streams.forEach(({id}) => {
+        scopes.push(`live-${id}`)
+      })
+
+      if (streams.length > 0) {
+        scopes.push(`live-any`)
+      }
       break
     case 'STUDENT':
       const studentClassIds = (

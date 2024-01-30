@@ -1,8 +1,9 @@
 /**
  * @type {import('@remix-run/dev').AppConfig}
  */
-module.exports = {
+export default {
   ignoredRouteFiles: ['.*'],
+  //server: 'server/index.js',
   //server: './server.js', // Disable by comment in dev if you don't need NTLM
   //server: process.env.NODE_ENV === 'production' ? './server.js' : undefined,
   devServerBroadcastDelay: 1000,
@@ -29,36 +30,8 @@ module.exports = {
   },
   serverDependenciesToBundle: [
     /@arcath\/utils.*/,
-    /mdx-bundler.*/,
-    /@uiw\/react-textarea-code-editor.*/,
-    /rehype.*/,
-    'unified',
-    /unist.*/,
-    /hast-util.*/,
-    /refractor.*/,
-    'bail',
-    'is-plain-obj',
-    'trough',
-    /vfile.*/,
-    'property-information',
-    'html-void-elements',
-    'zwitch',
-    'hastscript',
-    'web-namespaces',
-    'stringify-entities',
-    'ccount',
-    'comma-separated-tokens',
-    'space-separated-tokens',
-    /character-entities.*/,
-    'parse-entities',
-    'is-decimal',
-    'is-hexadecimal',
-    'is-alphanumerical',
-    'is-alphabetical',
-    'character-reference-invalid',
-    'decode-named-character-reference',
-    'devlop'
+    /@uiw\/react-textarea-code-editor.*/
   ],
-  serverModuleFormat: 'cjs',
+  //serverModuleFormat: 'cjs',
   future: {}
 }
