@@ -134,6 +134,10 @@ export const ConfigDefaults = {
     value: '',
     description:
       'The URL of the dash stream minus the stream key/file with a trailing slash type. E.g. https://rtmp.school.county.sch.uk/dash/live/'
+  },
+  streamReactions: {
+    value: '',
+    description: 'Comma seperated list of emoji to be used as stream reactions.'
   }
 } as const
 
