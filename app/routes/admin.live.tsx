@@ -60,7 +60,9 @@ const AdminLive = () => {
             {liveStreams.map(({id, title, key, live}) => {
               return (
                 <tr key={id}>
-                  <td>{title}</td>
+                  <td>
+                    <a href={`/live/${id}/dashboard`}>{title}</a>
+                  </td>
                   <td>{key}</td>
                   <td className="text-center">{live ? '🟢' : '🔴'}</td>
                   <td>

@@ -161,6 +161,12 @@ const AdminIndex = () => {
             Acceptable Use Policy
           </a>
           <a
+            href="/admin/live"
+            className="text-center border border-brand-dark rounded"
+          >
+            Live Streams
+          </a>
+          <a
             href="/admin/logs"
             className="text-center border border-brand-dark rounded"
           >
