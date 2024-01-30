@@ -31,6 +31,8 @@ Scopes are added to the shortcut search if they apply to the current user.
 | `{yearGroup}`       | Adds the current _students_ year group as set by the MIS                                                | year 8         |
 | `{regGroup}`        | Adds the current _students_ form as set by the MIS                                                      | 8l             |
 | `{class}`           | Added for every class the _student_ attends or the _staff_ teaches.                                     | `8l Ma`        |
+| `live-any`          | Added for staff if any live stream is running.                                                          | _N/A_          |
+| `live-{id}`         | Added for staff if the live stream of `id` is live.                                                     | _N/A_          |
 
 ### Using Scopes
 
