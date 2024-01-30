@@ -1,4 +1,4 @@
-import {getMDXComponent as gmc} from 'mdx-bundler/client'
+import {getMDXComponent as gmc} from 'mdx-bundler/client/index.js'
 import {motion, useMotionValue, useTransform} from 'framer-motion'
 import {useMemo, useEffect} from 'react'
 import * as dateFns from 'date-fns'
