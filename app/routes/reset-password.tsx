@@ -4,7 +4,7 @@ import {
   type LoaderFunctionArgs
 } from '@remix-run/node'
 import {useActionData} from '@remix-run/react'
-import * as ldap from 'ldapjs'
+import ldap from 'ldapjs'
 import {invariant} from '@arcath/utils'
 import {useState, useEffect} from 'react'
 
