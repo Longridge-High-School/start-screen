@@ -82,7 +82,14 @@ const Live = () => {
               Start Stream!
             </button>
           ) : (
-            <b>Stream is not running.</b>
+            <p>
+              <b>Stream is not running.</b>
+              <br />
+              <br />
+              <a className={buttonClasses()} href={`/live/${stream.id}`}>
+                Check Again
+              </a>
+            </p>
           )}
         </div>
       </div>
