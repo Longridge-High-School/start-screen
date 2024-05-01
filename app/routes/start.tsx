@@ -379,11 +379,11 @@ const StartPage = () => {
         </div>
         <div className="col-span-2 row-span-2">
           <div className="grid grid-cols-3 xl:grid-cols-4 gap-4">
-            {shortcuts.map(({id, title, icon, target}) => {
+            {shortcuts.map(({id, title, icon}) => {
               return (
                 <a
                   key={id}
-                  href={target}
+                  href={`/shortcuts/out/${id}`}
                   className="bg-white border border-gray-300 shadow-xl scale-100 hover:scale-105 hover:shadow-sm hover:shadow-inner transition-all p-2 flex items-center"
                 >
                   <img

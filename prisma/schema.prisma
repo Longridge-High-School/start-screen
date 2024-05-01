@@ -28,6 +28,7 @@ model User {
   classMemberships ClassMembership[]
   shortcuts        Shortcut[]
   aupAccepted      Boolean           @default(false)
+  clicks           Click[]
 }
 
 model Class {
@@ -57,6 +58,7 @@ model Shortcut {
   owner    User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId  Int
   priority Int      @default(10)
+  clicks   Click[]
 }
 
 model WirelessVoucher {
@@ -194,4 +196,13 @@ model LiveStream {
   descriptionCache String   @default("")
   createdAt        DateTime @default(now())
   updatedAt        DateTime @default(now()) @updatedAt
+}
+
+model Click {
+  id         Int      @id @default(autoincrement())
+  shortcut   Shortcut @relation(fields: [shortcutId], references: [id], onDelete: Cascade)
+  shortcutId Int
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     Int
+  createdAt  DateTime @default(now())
 }
