@@ -58,7 +58,9 @@ const VoucherPage = () => {
       </p>
       <p className="mt-4">
         <b>Voucher Code</b>:<br />
-        {voucher.code.match(/.{1,5}/g)?.join('-')}
+        {voucher.code}
+        <br />
+        <span className="text-gray-500">Case Sensative</span>
       </p>
       <p className="mt-2">{voucher.type}</p>
     </div>

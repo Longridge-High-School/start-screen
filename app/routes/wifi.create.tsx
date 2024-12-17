@@ -2,8 +2,6 @@ import type {ActionFunction, LoaderFunction} from '@remix-run/node'
 import {json, redirect} from '@remix-run/server-runtime'
 import {invariant, asyncForEach} from '@arcath/utils'
 
-import {getUnifi} from '~/lib/unifi.server'
-
 import {getUPNFromHeaders, getUserFromUPN} from '~/lib/user.server'
 import {getPrisma} from '~/lib/prisma'
 import {log} from '~/log.server'
@@ -35,41 +33,34 @@ export const action: ActionFunction = async ({request}) => {
 
   const formData = await request.formData()
 
-  const count = formData.get('count') as string | undefined
+  const codesAsString = formData.get('codes') as string | undefined
   const duration = formData.get('duration') as string | undefined
   const multiUseData = formData.get('multi-use') as string | undefined
 
-  invariant(count)
+  invariant(codesAsString)
   invariant(duration)
 
   const multiUse = multiUseData === 'on'
 
-  const unifi = await getUnifi()
   const prisma = getPrisma()
 
-  const response = await unifi.createVouchers(
-    parseInt(duration) * 1440,
-    parseInt(count),
-    multiUse ? 0 : 1
-  )
+  const codes = codesAsString.split('\r\n').filter(v => v.length > 2)
 
-  const vouchers = await unifi.getVouchers(response[0].create_time)
-
-  await asyncForEach(vouchers, async voucher => {
-    let type = `${duration} Day${parseInt(duration) > 1 ? 's' : ''}`
+  await asyncForEach(codes, async code => {
+    let type = `${duration} Hour${parseInt(duration) > 1 ? 's' : ''}`
 
     if (multiUse) {
       type += ` (Multi Use)`
     }
 
     await prisma.wirelessVoucher.create({
-      data: {code: voucher.code, type, claimed: false}
+      data: {code, type, claimed: false}
     })
   })
 
   await log(
     'Guest WiFi',
-    `Created ${count} ${parseInt(duration) * 1440} day ${
+    `Created ${codes.length} ${parseInt(duration)} hour ${
       multiUse ? 'Multi Use' : ''
     } vouchers`,
     user.username
@@ -85,21 +76,16 @@ const CreatePage = () => {
       <form method="POST">
         <fieldset className={fieldsetClasses()}>
           <label className={labelClasses()}>
-            <span className={labelSpanClasses()}>Count</span>
-            <input
-              name="count"
-              type="number"
-              className={inputClasses()}
-              defaultValue={10}
-            />
+            <span className={labelSpanClasses()}>Codes (One per line)</span>
+            <textarea name="codes" className={inputClasses()} />
           </label>
           <label className={labelClasses()}>
-            <span className={labelSpanClasses()}>Duration (Days)</span>
+            <span className={labelSpanClasses()}>Duration (Hours)</span>
             <input
               name="duration"
               type="number"
               className={inputClasses()}
-              defaultValue={1}
+              defaultValue={12}
             />
           </label>
           <label className={labelClasses()}>
@@ -108,7 +94,7 @@ const CreatePage = () => {
               name="multi-use"
               type="checkbox"
               className={inputClasses()}
-              defaultChecked={false}
+              defaultChecked={true}
             />
           </label>
           <div className={labelClasses()}>

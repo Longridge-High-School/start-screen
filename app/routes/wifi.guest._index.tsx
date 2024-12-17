@@ -94,7 +94,7 @@ const WiFiPage = () => {
             <div key={voucher.id} className="rounded-lg bg-white h-48 p-2">
               <h2 className="text-xl mb-4">LHS Guest Network Access</h2>
               <p>
-                <b>Voucher Code</b>: XXXXX-
+                <b>Voucher Code</b>: XXXXX
                 {voucher.code.match(/.{1,5}/g)?.pop()}
                 <br />
                 {voucher.type}
