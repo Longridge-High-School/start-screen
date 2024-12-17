@@ -9,12 +9,12 @@ import {
   isRouteErrorResponse,
   useLoaderData
 } from '@remix-run/react'
-import type {
-  MetaFunction,
-  LinksFunction,
-  LoaderFunctionArgs
+import {
+  json,
+  type MetaFunction,
+  type LinksFunction,
+  type LoaderFunctionArgs
 } from '@remix-run/node'
-import {json} from '@remix-run/node'
 import {pick} from '@arcath/utils'
 import colorString from 'color-string'
 

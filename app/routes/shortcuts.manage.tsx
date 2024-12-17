@@ -1,7 +1,6 @@
-import type {LoaderFunction} from '@remix-run/node'
-import type {User, Shortcut} from '@prisma/client'
+import {json, type LoaderFunction} from '@remix-run/node'
+import {type User, type Shortcut} from '@prisma/client'
 
-import {json} from '@remix-run/node'
 import {useLoaderData, Outlet} from '@remix-run/react'
 
 import {getUPNFromHeaders, getUserFromUPN} from '~/lib/user.server'

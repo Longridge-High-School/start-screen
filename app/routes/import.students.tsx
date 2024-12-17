@@ -1,6 +1,4 @@
-import type {ActionFunction} from '@remix-run/node'
-
-import {json} from '@remix-run/node'
+import {json, type ActionFunction} from '@remix-run/node'
 
 import {getPrisma} from '~/lib/prisma'
 import {getConfigValue} from '~/lib/config.server'
@@ -74,7 +72,7 @@ export const action: ActionFunction = async ({request}) => {
 
         await prisma.user.create({data: newUser})
         await log('Imports', `Added new student ${newUser.username}`)
-      }).catch(async reason => {
+      }).catch(async () => {
         await log('Imports', `Could not import ${username}`)
       })
     }

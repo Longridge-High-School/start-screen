@@ -1,9 +1,13 @@
-import type {ActionFunction, LoaderFunction} from '@remix-run/node'
-import {json, redirect} from '@remix-run/server-runtime'
+import {
+  json,
+  redirect,
+  type ActionFunction,
+  type LoaderFunction
+} from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
 import {invariant} from '@arcath/utils'
 
-import type {User} from '@prisma/client'
+import {type User} from '@prisma/client'
 
 import {getUPNFromHeaders, getUserFromUPN} from '~/lib/user.server'
 import {getPrisma} from '~/lib/prisma'

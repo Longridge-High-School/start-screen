@@ -1,4 +1,4 @@
-import type {ActionFunction, LoaderFunction} from '@remix-run/node'
+import {type ActionFunction, type LoaderFunction} from '@remix-run/node'
 import {json, redirect} from '@remix-run/server-runtime'
 import {invariant, asyncForEach} from '@arcath/utils'
 

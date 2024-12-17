@@ -1,6 +1,5 @@
-import type {FunctionComponent} from 'react'
+import {useState, type FunctionComponent} from 'react'
 import {motion} from 'framer-motion'
-import {useState} from 'react'
 
 export const Button: FunctionComponent<{
   image: string

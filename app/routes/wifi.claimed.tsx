@@ -1,7 +1,6 @@
-import type {LoaderFunction} from '@remix-run/node'
-import type {User, WirelessVoucher} from '@prisma/client'
+import {json, type LoaderFunction} from '@remix-run/node'
+import {type User, type WirelessVoucher} from '@prisma/client'
 
-import {json} from '@remix-run/node'
 import {useLoaderData} from 'react-router'
 import {format} from 'date-fns'
 

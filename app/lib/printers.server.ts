@@ -14,7 +14,6 @@ export type PrinterData = {
 }
 
 declare global {
-  // eslint-disable-next-line
   var __printersCache: {time: Date; data: PrinterData[]} | undefined
 }
 
@@ -42,7 +41,7 @@ export const getSupplyLevels = async () => {
     lastUpdate === null ||
     parseInt(lastUpdate) < Date.now() - SECOND_IN_MS * 600
   ) {
-    asyncForEach(
+    await asyncForEach(
       printers,
       async ({id, blackOID, cyanOID, yellowOID, magentaOID}) => {
         await addJob('updatePrintLevels', {

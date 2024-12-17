@@ -13,7 +13,7 @@ export const TabedBox: FC<{
       <div className="w-16 flex flex-col">
         {children.map((child, i) => {
           if (child === undefined) {
-            return //eslint-disable-line
+            return
           }
 
           return (

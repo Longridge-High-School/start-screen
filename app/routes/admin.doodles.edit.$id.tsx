@@ -198,9 +198,9 @@ const AdminDoodlesEdit = () => {
               <button className={buttonClasses()}>Update Doodle!</button>
               <button
                 className={buttonClasses('bg-blue-300', ['col-start-3'])}
-                onClick={e => {
+                onClick={async e => {
                   e.preventDefault()
-                  updatePreview()
+                  await updatePreview()
                 }}
               >
                 Preview Doodle!

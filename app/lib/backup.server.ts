@@ -21,7 +21,7 @@ export const backup = async () => {
 
   const {username, password, host, port, db} = matches!.groups!
 
-  await new Promise((resolve, reject) => {
+  await new Promise(resolve => {
     exec(
       `pg_dump -Fc -U ${username} -d ${db} -h ${host} -p ${port} > "${BACKUPS_DIR}/db.dump"`,
       {env: {PGPASSWORD: password, NODE_ENV: process.env.NODE_ENV}},
@@ -43,10 +43,10 @@ export const backup = async () => {
     ],
     ({filePath, zipPath}) => {
       console.dir([filePath, zipPath])
-      return new Promise((resolve, reject) => {
+      return new Promise(resolve => {
         zip.addLocalFolderAsync(
           filePath,
-          (s, e) => {
+          () => {
             resolve()
           },
           zipPath
@@ -102,7 +102,7 @@ export const restore = async (filePath: string) => {
 
   const {username, password, host, port, db} = matches!.groups!
 
-  await new Promise((resolve, reject) => {
+  await new Promise(resolve => {
     exec(
       `pg_restore -C -U ${username} -d ${db} -h ${host} -p ${port} < "${path.join(
         BACKUPS_DIR,

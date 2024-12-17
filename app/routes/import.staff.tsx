@@ -1,6 +1,5 @@
-import type {ActionFunction} from '@remix-run/node'
+import {json, type ActionFunction} from '@remix-run/node'
 
-import {json} from '@remix-run/node'
 import {asyncForEach} from '@arcath/utils'
 
 import {getPrisma} from '~/lib/prisma'
@@ -43,7 +42,7 @@ export const action: ActionFunction = async ({request}) => {
 
   const prisma = getPrisma()
 
-  asyncForEach(staffMembers, async ({name, username}) => {
+  await asyncForEach(staffMembers, async ({name, username}) => {
     const user = await prisma.user.findFirst({
       where: {username}
     })

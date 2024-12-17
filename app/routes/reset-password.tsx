@@ -89,7 +89,7 @@ const resetPassword = async (username: string) => {
             )
           })
 
-          res.on('end', result => {
+          res.on('end', () => {
             if (entries === 0) {
               resolve({error: `Unable to find user ${username}`})
               client.unbind()

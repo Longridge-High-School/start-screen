@@ -1,5 +1,4 @@
-import type {LoaderFunction} from '@remix-run/node'
-import {redirect} from '@remix-run/node'
+import {type LoaderFunction, redirect} from '@remix-run/node'
 
 import {getUPNFromHeaders, getUserFromUPN} from '~/lib/user.server'
 import {getPrisma} from '~/lib/prisma'

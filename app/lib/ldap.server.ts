@@ -7,7 +7,7 @@ export const createClient = (
 ): Promise<
   {error: string; client: undefined} | {client: ldap.Client; error: undefined}
 > => {
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     const client = ldap.createClient({
       url: `ldaps://${dc}`,
       tlsOptions: {rejectUnauthorized: false}
@@ -28,7 +28,7 @@ export const findUserDN = async (
   username: string,
   ou: string
 ): Promise<{error: string; dn: undefined} | {error: undefined; dn: string}> => {
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     client.search(
       ou,
       {
@@ -47,7 +47,7 @@ export const findUserDN = async (
           resolve({dn: entry.dn.toString(), error: undefined})
         })
 
-        res.on('end', result => {
+        res.on('end', () => {
           if (entries === 0) {
             resolve({error: `Unable to find user ${username}`, dn: undefined})
             client.unbind()

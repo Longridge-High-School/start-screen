@@ -73,7 +73,7 @@ export const action = async ({request}: ActionFunctionArgs) => {
         modification: createAttribute('member', dn)
       })
 
-      await new Promise((resolve, reject) => {
+      await new Promise(resolve => {
         client.modify(groupDN, [change], err => {
           resolve(err)
         })

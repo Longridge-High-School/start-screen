@@ -1,6 +1,7 @@
 import path from 'path'
-import type {ActionFunction, LoaderFunction} from '@remix-run/node'
 import {
+  type ActionFunction,
+  type LoaderFunction,
   redirect,
   unstable_parseMultipartFormData,
   unstable_composeUploadHandlers,
@@ -8,7 +9,7 @@ import {
   unstable_createMemoryUploadHandler,
   json
 } from '@remix-run/node'
-import type {Shortcut} from '@prisma/client'
+import {type Shortcut} from '@prisma/client'
 import {invariant, clamp} from '@arcath/utils'
 
 import {getUPNFromHeaders, getUserFromUPN} from '~/lib/user.server'

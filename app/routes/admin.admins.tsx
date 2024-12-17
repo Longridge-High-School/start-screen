@@ -5,7 +5,7 @@ import {
   type ActionFunctionArgs
 } from '@remix-run/node'
 import {useLoaderData, useRouteLoaderData} from '@remix-run/react'
-import type {User} from '@prisma/client'
+import {type User} from '@prisma/client'
 import {invariant} from '@arcath/utils'
 
 import {getUPNFromHeaders, getUserFromUPN} from '~/lib/user.server'
@@ -20,7 +20,7 @@ import {
   labelSpanClasses
 } from '~/lib/classes'
 
-import type {RootLoaderData} from '~/root'
+import {type RootLoaderData} from '~/root'
 
 export const loader: LoaderFunction = async ({request}) => {
   const user = await getUserFromUPN(getUPNFromHeaders(request))

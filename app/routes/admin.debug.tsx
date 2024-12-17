@@ -1,5 +1,4 @@
-import type {LoaderFunction} from '@remix-run/node'
-import {json} from '@remix-run/node'
+import {json, type LoaderFunction} from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
 import {keyValue} from '@arcath/utils'
 

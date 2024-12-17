@@ -1,7 +1,11 @@
-import type {ActionFunction, LoaderFunction} from '@remix-run/node'
-import type {User, WirelessVoucher} from '@prisma/client'
+import {
+  json,
+  redirect,
+  type ActionFunction,
+  type LoaderFunction
+} from '@remix-run/node'
+import {type User, type WirelessVoucher} from '@prisma/client'
 
-import {json, redirect} from '@remix-run/node'
 import {useLoaderData} from 'react-router'
 import {invariant} from '@arcath/utils'
 
