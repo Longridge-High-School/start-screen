@@ -18,7 +18,7 @@
     "start:app": "cross-env NODE_ENV=production node ./server/index.js",
     "start:worker": "cross-env NODE_ENV=production node ./worker/worker.mjs",
     "docker": "prisma migrate deploy && prisma generate && npm run start",
-    "lint": "eslint --ext js,jsx,ts,tsx .",
+    "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "typecheck": "tsc --skipLibCheck",
     "prettier": "prettier app --check --end-of-line auto"
   },
@@ -77,10 +77,15 @@
     "autoprefixer": "^10.4.20",
     "eslint": "^9.14.0",
     "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import-x": "^4.5.0",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "globals": "^15.13.0",
     "postcss": "^8.4.49",
     "prettier": "^3.3.3",
     "tailwindcss": "^3.4.14",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.18.1"
   },
   "engines": {
     "node": ">=18.0.0"
