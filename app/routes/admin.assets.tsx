@@ -60,7 +60,7 @@ export const action = async ({request}: ActionFunctionArgs) => {
 
   const uploadHandler = unstable_composeUploadHandlers(
     unstable_createFileUploadHandler({
-      maxPartSize: 5_000_000,
+      maxPartSize: 50_000_000,
       directory: 'public/assets/',
       file: ({filename}) => {
         return filename
